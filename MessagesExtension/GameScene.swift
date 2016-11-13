@@ -292,9 +292,15 @@ extension Array {
     }
 }
 
-struct MarbleIndex: Equatable {
+struct MarbleIndex: Equatable, CustomStringConvertible {
     let row: Int
     let column: Int
+
+    var description: String {
+        get {
+            return "(\(row), \(column))"
+        }
+    }
 
     init(_ tuple: (Int, Int)) {
         self.row = tuple.0
