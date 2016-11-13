@@ -20,8 +20,6 @@ class GameScene: SKScene {
     let boardWidth = 13
     let boardHeight = 17
 
-    typealias MarbleIndex = (Int, Int)
-
     // swiftlint:disable comma
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
@@ -65,8 +63,8 @@ class GameScene: SKScene {
 
         gameBoard = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
 
-        let player0StartingIndices = [( 0, 6), ( 1, 5), ( 1, 6), ( 2, 5), ( 2, 6), ( 2, 7), ( 3, 4), ( 3, 5), ( 3, 6), ( 3, 7), ( 4, 4), ( 4, 5), ( 4, 6), ( 4, 7), ( 4, 8)]
-        let player1StartingIndices = [(16, 6), (15, 5), (15, 6), (14, 5), (14, 6), (14, 7), (13, 4), (13, 5), (13, 6), (13, 7), (12, 4), (12, 5), (12, 6), (12, 7), (12, 8)]
+        let player0StartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7)), MarbleIndex(( 4, 4)), MarbleIndex(( 4, 5)), MarbleIndex(( 4, 6)), MarbleIndex(( 4, 7)), MarbleIndex(( 4, 8))]
+        let player1StartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7)), MarbleIndex((12, 4)), MarbleIndex((12, 5)), MarbleIndex((12, 6)), MarbleIndex((12, 7)), MarbleIndex((12, 8))]
 
         for index in player0StartingIndices {
             drawMarbleAt(index: index, color: .blue)
@@ -87,9 +85,9 @@ class GameScene: SKScene {
     }
 
     func coordinatesFor(index: MarbleIndex) -> CGPoint {
-        let y = startY + (dy * CGFloat(index.0))
-        var x = startX + ((dx * CGFloat(index.1 - 6)) * 2)
-        if index.0 % 2 == 1 { x += dx }
+        let y = startY + (dy * CGFloat(index.row))
+        var x = startX + ((dx * CGFloat(index.column - 6)) * 2)
+        if index.row % 2 == 1 { x += dx }
 
         return CGPoint(x: x, y: y)
     }
@@ -99,23 +97,23 @@ class GameScene: SKScene {
         var column = row % 2 == 0 ? point.x : point.x - dx
         column = (((column - startX) / 2) / dx) + 6
 
-        return (row, Int(round(column)))
+        return MarbleIndex((row, Int(round(column))))
     }
 
     func drawMarbleAt(index: MarbleIndex, color: MarbleColor) {
-        gameBoard[index.0][index.1] = drawMarble(atPoint: coordinatesFor(index: index), color: color)
+        gameBoard[index.row][index.column] = drawMarble(atPoint: coordinatesFor(index: index), color: color)
     }
 
     func isValid(index: MarbleIndex) -> Bool {
-        guard index.0 < boardHeight else {
+        guard index.row < boardHeight else {
             return false
         }
 
-        guard index.1 < boardWidth else {
+        guard index.column < boardWidth else {
             return false
         }
 
-        return ((rowStarts[index.0])..<(rowStarts[index.0] + rowWidths[index.0])).contains(index.1)
+        return ((rowStarts[index.row])..<(rowStarts[index.row] + rowWidths[index.row])).contains(index.column)
     }
 
     var highlightNodes = [HighlightNode]()
@@ -143,24 +141,25 @@ class GameScene: SKScene {
             return true
         }
 
-        return gameBoard[index.0][index.1] != nil
+        return gameBoard[index.row][index.column] != nil
     }
 
     func highligtAdjacentSpotsForMarbleAt(index: MarbleIndex) {
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0, index.1 + 1))) // Right
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0, index.1 - 1))) // Left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0 - 1, index.1 - 1 + (index.0 % 2)))) // Up left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0 - 1, index.1 + (index.0 % 2)))) // Up right
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0 + 1, index.1 - 1 + (index.0 % 2)))) // Down left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: (index.0 + 1, index.1 + (index.0 % 2)))) // Down right
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.right())) // Right
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.left())) // Left
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upLeft())) // Up left
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upRight())) // Up right
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downLeft())) // Down left
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downRight())) // Down right
     }
 
     var knownJumps = [MarbleIndex]()
     func highlightJumpsForMarbleAt(index: MarbleIndex) {
 
         // Right
-        if marbleExistsAt(index: (index.0, index.1 + 1)) {
-            let rightJump = (index.0, index.1 + 2)
+        let right = index.right()
+        if marbleExistsAt(index: right) {
+            let rightJump = right.right()
             if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
                 if let highlightNode = highlightIfEmptyAt(index: rightJump) {
                     knownJumps.append(rightJump)
@@ -171,61 +170,66 @@ class GameScene: SKScene {
         }
 
         // Left
-        if marbleExistsAt(index: (index.0, index.1 - 1)) {
-            let rightJump = (index.0, index.1 - 2)
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
+        let left = index.left()
+        if marbleExistsAt(index: left) {
+            let leftJump = left.left()
+            if !knownJumps.contains(where: { (e) -> Bool in e == leftJump }) {
+                if let highlightNode = highlightIfEmptyAt(index: leftJump) {
+                    knownJumps.append(leftJump)
                     highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
+                    highlightJumpsForMarbleAt(index: leftJump)
                 }
             }
         }
 
         // Up left
-        if marbleExistsAt(index: (index.0 - 1, index.1 - 1 + (index.0 % 2))) {
-            let rightJump = (index.0 - 2, index.1 - 1)
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
+        let upLeft = index.upLeft()
+        if marbleExistsAt(index: upLeft) {
+            let upLeftJump = upLeft.upLeft()
+            if !knownJumps.contains(where: { (e) -> Bool in e == upLeftJump }) {
+                if let highlightNode = highlightIfEmptyAt(index: upLeftJump) {
+                    knownJumps.append(upLeftJump)
                     highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
+                    highlightJumpsForMarbleAt(index: upLeftJump)
                 }
             }
         }
 
         // Up right
-        if marbleExistsAt(index: (index.0 - 1, index.1 + (index.0 % 2))) {
-            let rightJump = (index.0 - 2, index.1 + 1)
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
+        let upRight = index.upRight()
+        if marbleExistsAt(index: upRight) {
+            let upRightJump = upRight.upRight()
+            if !knownJumps.contains(where: { (e) -> Bool in e == upRightJump }) {
+                if let highlightNode = highlightIfEmptyAt(index: upRightJump) {
+                    knownJumps.append(upRightJump)
                     highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
+                    highlightJumpsForMarbleAt(index: upRightJump)
                 }
             }
         }
 
         // Down left
-        if marbleExistsAt(index: (index.0 + 1, index.1 - 1 + (index.0 % 2))) {
-            let rightJump = (index.0 + 2, index.1 - 1)
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
+        let downLeft = index.downLeft()
+        if marbleExistsAt(index: downLeft) {
+            let downLeftJump = downLeft.downLeft()
+            if !knownJumps.contains(where: { (e) -> Bool in e == downLeftJump }) {
+                if let highlightNode = highlightIfEmptyAt(index: downLeftJump) {
+                    knownJumps.append(downLeftJump)
                     highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
+                    highlightJumpsForMarbleAt(index: downLeftJump)
                 }
             }
         }
 
         // Down right
-        if marbleExistsAt(index: (index.0 + 1, index.1 + (index.0 % 2))) {
-            let rightJump = (index.0 + 2, index.1 + 1)
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
+        let downRight = index.downRight()
+        if marbleExistsAt(index: downRight) {
+            let downRightJump = downRight.downRight()
+            if !knownJumps.contains(where: { (e) -> Bool in e == downRightJump }) {
+                if let highlightNode = highlightIfEmptyAt(index: downRightJump) {
+                    knownJumps.append(downRightJump)
                     highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
+                    highlightJumpsForMarbleAt(index: downRightJump)
                 }
             }
         }
@@ -253,8 +257,8 @@ class GameScene: SKScene {
 
     func moveSelectedMarble(toIndex newIndex: MarbleIndex) {
         let currentIndex = indexFrom(point: selectedMarble!.position)
-        gameBoard[currentIndex.0][currentIndex.1] = nil
-        gameBoard[newIndex.0][newIndex.1] = selectedMarble!
+        gameBoard[currentIndex.row][currentIndex.column] = nil
+        gameBoard[newIndex.row][newIndex.column] = selectedMarble!
         selectedMarble!.position = coordinatesFor(index: newIndex)
     }
 
@@ -270,11 +274,11 @@ class GameScene: SKScene {
     func drawCoordinateOverlay() {
         for i in 0..<17 {
             for j in 0..<13 {
-                guard isValid(index: (i, j)) else {
+                guard isValid(index: MarbleIndex(i, j)) else {
                     continue
                 }
 
-                drawCoordinateLabel(forIndex: (i, j))
+                drawCoordinateLabel(forIndex: MarbleIndex(i, j))
             }
         }
     }
@@ -285,5 +289,43 @@ extension Array {
         if newElement != nil {
             self.append(newElement!)
         }
+    }
+}
+
+struct MarbleIndex: Equatable {
+    let row: Int
+    let column: Int
+
+    init(_ tuple: (Int, Int)) {
+        self.row = tuple.0
+        self.column = tuple.1
+    }
+
+    func right() -> MarbleIndex {
+        return MarbleIndex((row, column + 1))
+    }
+
+    func left() -> MarbleIndex {
+        return MarbleIndex((row, column - 1))
+    }
+
+    func upLeft() -> MarbleIndex {
+        return MarbleIndex((row - 1, column - 1 + (row % 2)))
+    }
+
+    func upRight() -> MarbleIndex {
+        return MarbleIndex((row - 1, column + (row % 2)))
+    }
+
+    func downLeft() -> MarbleIndex {
+        return MarbleIndex((row + 1, column - 1 + (row % 2)))
+    }
+
+    func downRight() -> MarbleIndex {
+        return MarbleIndex((row + 1, column + (row % 2)))
+    }
+
+    public static func == (lhs: MarbleIndex, rhs: MarbleIndex) -> Bool {
+        return lhs.row == rhs.row && lhs.column == rhs.column
     }
 }
