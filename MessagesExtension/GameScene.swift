@@ -145,91 +145,29 @@ class GameScene: SKScene {
     }
 
     func highligtAdjacentSpotsForMarbleAt(index: MarbleIndex) {
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.right())) // Right
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.left())) // Left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upLeft())) // Up left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upRight())) // Up right
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downLeft())) // Down left
-        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downRight())) // Down right
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.left()))
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.right()))
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upLeft()))
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.upRight()))
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downLeft()))
+        highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downRight()))
     }
 
     var knownJumps = [MarbleIndex]()
     func highlightJumpsForMarbleAt(index: MarbleIndex) {
 
-        // Right
-        let right = index.right()
-        if marbleExistsAt(index: right) {
-            let rightJump = right.right()
-            if !knownJumps.contains(where: { (e) -> Bool in e == rightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: rightJump) {
-                    knownJumps.append(rightJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: rightJump)
-                }
-            }
-        }
+        let directions = [MarbleIndex.left, MarbleIndex.right, MarbleIndex.upLeft, MarbleIndex.upRight, MarbleIndex.downLeft, MarbleIndex.downRight]
 
-        // Left
-        let left = index.left()
-        if marbleExistsAt(index: left) {
-            let leftJump = left.left()
-            if !knownJumps.contains(where: { (e) -> Bool in e == leftJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: leftJump) {
-                    knownJumps.append(leftJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: leftJump)
-                }
-            }
-        }
-
-        // Up left
-        let upLeft = index.upLeft()
-        if marbleExistsAt(index: upLeft) {
-            let upLeftJump = upLeft.upLeft()
-            if !knownJumps.contains(where: { (e) -> Bool in e == upLeftJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: upLeftJump) {
-                    knownJumps.append(upLeftJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: upLeftJump)
-                }
-            }
-        }
-
-        // Up right
-        let upRight = index.upRight()
-        if marbleExistsAt(index: upRight) {
-            let upRightJump = upRight.upRight()
-            if !knownJumps.contains(where: { (e) -> Bool in e == upRightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: upRightJump) {
-                    knownJumps.append(upRightJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: upRightJump)
-                }
-            }
-        }
-
-        // Down left
-        let downLeft = index.downLeft()
-        if marbleExistsAt(index: downLeft) {
-            let downLeftJump = downLeft.downLeft()
-            if !knownJumps.contains(where: { (e) -> Bool in e == downLeftJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: downLeftJump) {
-                    knownJumps.append(downLeftJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: downLeftJump)
-                }
-            }
-        }
-
-        // Down right
-        let downRight = index.downRight()
-        if marbleExistsAt(index: downRight) {
-            let downRightJump = downRight.downRight()
-            if !knownJumps.contains(where: { (e) -> Bool in e == downRightJump }) {
-                if let highlightNode = highlightIfEmptyAt(index: downRightJump) {
-                    knownJumps.append(downRightJump)
-                    highlightNodes.append(highlightNode)
-                    highlightJumpsForMarbleAt(index: downRightJump)
+        for direction in directions {
+            let indexOfDirection = direction(index)()
+            if marbleExistsAt(index: indexOfDirection) {
+                let directionalJump = direction(indexOfDirection)()
+                if !knownJumps.contains(where: { (e) -> Bool in e == directionalJump }) {
+                    if let highlightNode = highlightIfEmptyAt(index: directionalJump) {
+                        knownJumps.append(directionalJump)
+                        highlightNodes.append(highlightNode)
+                        highlightJumpsForMarbleAt(index: directionalJump)
+                    }
                 }
             }
         }
