@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		689812A51DD64C2C008212E8 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689812A41DD64C2C008212E8 /* GameScene.swift */; };
+		689812A71DD6511C008212E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21A01DD63624006FC576 /* Assets.xcassets */; };
+		689812A91DD69AEF008212E8 /* MarbleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689812A81DD69AEF008212E8 /* MarbleNode.swift */; };
+		689812AB1DD6A78C008212E8 /* HighlightNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689812AA1DD6A78C008212E8 /* HighlightNode.swift */; };
 		68AF21A11DD63624006FC576 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21A01DD63624006FC576 /* Assets.xcassets */; };
 		68AF21A81DD63625006FC576 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 68AF21A71DD63625006FC576 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		68AF21AD1DD63625006FC576 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68AF21AC1DD63625006FC576 /* Messages.framework */; };
 		68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AF21AF1DD63625006FC576 /* MessagesViewController.swift */; };
 		68AF21B31DD63625006FC576 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B11DD63625006FC576 /* MainInterface.storyboard */; };
 		68AF21B51DD63625006FC576 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B41DD63625006FC576 /* Assets.xcassets */; };
+		68AF21C11DD646D6006FC576 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21C01DD646D6006FC576 /* GameScene.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +45,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		689812A41DD64C2C008212E8 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		689812A81DD69AEF008212E8 /* MarbleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarbleNode.swift; sourceTree = "<group>"; };
+		689812AA1DD6A78C008212E8 /* HighlightNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightNode.swift; sourceTree = "<group>"; };
 		68AF219D1DD63624006FC576 /* Chinese Checkers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chinese Checkers.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68AF21A01DD63624006FC576 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		68AF21A21DD63624006FC576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -49,6 +57,7 @@
 		68AF21B21DD63625006FC576 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		68AF21B41DD63625006FC576 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		68AF21B61DD63625006FC576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		68AF21C01DD646D6006FC576 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +113,12 @@
 			children = (
 				68AF21AF1DD63625006FC576 /* MessagesViewController.swift */,
 				68AF21B11DD63625006FC576 /* MainInterface.storyboard */,
+				68AF21C01DD646D6006FC576 /* GameScene.sks */,
 				68AF21B41DD63625006FC576 /* Assets.xcassets */,
 				68AF21B61DD63625006FC576 /* Info.plist */,
+				689812A41DD64C2C008212E8 /* GameScene.swift */,
+				689812A81DD69AEF008212E8 /* MarbleNode.swift */,
+				689812AA1DD6A78C008212E8 /* HighlightNode.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -137,6 +150,7 @@
 				68AF21A31DD63624006FC576 /* Sources */,
 				68AF21A41DD63624006FC576 /* Frameworks */,
 				68AF21A51DD63624006FC576 /* Resources */,
+				689812A61DD64C69008212E8 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -202,17 +216,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				68AF21B51DD63625006FC576 /* Assets.xcassets in Resources */,
+				68AF21C11DD646D6006FC576 /* GameScene.sks in Resources */,
+				689812A71DD6511C008212E8 /* Assets.xcassets in Resources */,
 				68AF21B31DD63625006FC576 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		689812A61DD64C69008212E8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    if [ -f .swiftlint.yml ]; then\n        swiftlint\n    else\n        echo \"warning: Could not find swiftlint configuration\"\n    fi\n\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\nexit 0";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		68AF21A31DD63624006FC576 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				689812AB1DD6A78C008212E8 /* HighlightNode.swift in Sources */,
+				689812A51DD64C2C008212E8 /* GameScene.swift in Sources */,
+				689812A91DD69AEF008212E8 /* MarbleNode.swift in Sources */,
 				68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,6 +440,7 @@
 				68AF21BB1DD63625006FC576 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		68AF21BD1DD63625006FC576 /* Build configuration list for PBXNativeTarget "Chinese Checkers" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +449,7 @@
 				68AF21BF1DD63625006FC576 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
