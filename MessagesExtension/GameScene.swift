@@ -9,6 +9,14 @@
 import Foundation
 import SpriteKit
 
+enum MarbleColor: String {
+    case blue
+    case green
+    case red
+
+    static let allColors = [MarbleColor.blue, .green, .red]
+}
+
 class GameScene: SKScene {
 
     static var sharedGame: GameScene!
@@ -29,17 +37,17 @@ class GameScene: SKScene {
     var selectedMarble: MarbleNode? {
         didSet {
             // todo: Validate that you own this marble
+            if selectedMarble != nil {
+                if selectedMarble!.marbleColor != MessagesViewController.sharedMessagesViewController.nextGameState!.playerColor {
+                    selectedMarble = oldValue
+                    return
+                }
+            }
 
             oldValue?.unHighlight()
             selectedMarble?.highlight()
             highlightMovesFor(marble: selectedMarble!)
         }
-    }
-
-    enum MarbleColor: String {
-        case blue
-        case green
-        case red
     }
 
     override init() {
@@ -53,8 +61,19 @@ class GameScene: SKScene {
         GameScene.sharedGame = self
     }
 
-    func setup() {
-        drawCoordinateOverlay()
+    func setup(identifier: String? = nil) {
+//        drawCoordinateOverlay()
+
+        if identifier != nil {
+            if let data = UserDefaults.standard.object(forKey: identifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString) as? Data {
+                if let gameBoard = NSKeyedUnarchiver.unarchiveObject(with: data) as? [[MarbleNode?]] {
+                    self.gameBoard = gameBoard
+                    redrawGameBoard()
+                    return
+                }
+            }
+        }
+
         resetGame()
     }
 
@@ -74,8 +93,18 @@ class GameScene: SKScene {
         }
     }
 
+    func redrawGameBoard() {
+        for i in 0..<gameBoard.count {
+            for j in 0..<gameBoard[i].count {
+                if let marble = gameBoard[i][j] {
+                    drawMarbleAt(index: MarbleIndex((i, j)), color: marble.marbleColor)
+                }
+            }
+        }
+    }
+
     func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 15) -> MarbleNode {
-        let marbleSprite = MarbleNode(imageNamed: color.rawValue)
+        let marbleSprite = MarbleNode(color: color)
         marbleSprite.size = CGSize(width: radius, height: radius)
         marbleSprite.position = point
         marbleSprite.isUserInteractionEnabled = true
@@ -105,11 +134,11 @@ class GameScene: SKScene {
     }
 
     func isValid(index: MarbleIndex) -> Bool {
-        guard index.row < boardHeight else {
+        guard index.row >= 0 && index.row < boardHeight else {
             return false
         }
 
-        guard index.column < boardWidth else {
+        guard index.column >= 0 && index.column < boardWidth else {
             return false
         }
 
@@ -195,9 +224,17 @@ class GameScene: SKScene {
 
     func moveSelectedMarble(toIndex newIndex: MarbleIndex) {
         let currentIndex = indexFrom(point: selectedMarble!.position)
-        gameBoard[currentIndex.row][currentIndex.column] = nil
-        gameBoard[newIndex.row][newIndex.column] = selectedMarble!
-        selectedMarble!.position = coordinatesFor(index: newIndex)
+
+        moveMarble(from: currentIndex, to: newIndex)
+        MessagesViewController.sharedMessagesViewController.sendMove(from: currentIndex, to: newIndex)
+    }
+
+    func moveMarble(from: MarbleIndex, to: MarbleIndex) {
+        gameBoard[to.row][to.column] = gameBoard[from.row][from.column]!
+
+        gameBoard[from.row][from.column] = nil
+        gameBoard[to.row][to.column]!.position = coordinatesFor(index: to)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: gameBoard), forKey: MessagesViewController.sharedMessagesViewController.currentGameIdentifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString)
     }
 
     func drawCoordinateLabel(forIndex index: MarbleIndex) {
@@ -236,13 +273,19 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
 
     var description: String {
         get {
-            return "(\(row), \(column))"
+            return "(\(row),\(column))"
         }
     }
 
     init(_ tuple: (Int, Int)) {
         self.row = tuple.0
         self.column = tuple.1
+    }
+
+    init(string: String) {
+        let indices = String(string.characters.dropFirst().dropLast()).components(separatedBy: ",")
+        self.row = Int(indices[0])!
+        self.column = Int(indices[1])!
     }
 
     func right() -> MarbleIndex {
