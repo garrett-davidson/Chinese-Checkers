@@ -252,11 +252,12 @@ class MessagesViewController: MSMessagesAppViewController {
             // Append my color/uuid to the player list
             print("New game")
             var previousPlayers = previousGameState.players
-            for color in MarbleColor.allColors {
+            for color in [MarbleColor.red, .purple, .green, .cyan, .orange, .yellow] {
                 if !(previousPlayers!.values.contains(color.rawValue)) {
                     nextGameState?.playerColor = color
                     previousPlayers![conversation.localParticipantIdentifier.uuidString] = color.rawValue
                     nextGameState?.players = previousPlayers
+                    break
                 }
             }
 
@@ -273,6 +274,13 @@ class MessagesViewController: MSMessagesAppViewController {
         nextGameState!.command = .move
         nextGameState?.playerColor = MarbleColor(rawValue: nextGameState!.players![currentConversation.localParticipantIdentifier.uuidString]!)
         nextGameState?.move = (from, to)
+
+        let score = gameScene.scoreFor(color: nextGameState!.playerColor)
+        print(score)
+        if score == -1 {
+            print("I win")
+        }
+
         sendReply(session: currentConversation.selectedMessage!.session!)
     }
 }
@@ -305,5 +313,11 @@ extension Array where Element: Equatable {
     func elementAfter(element: Element) -> Element {
         let index = self.index(of: element)!
         return self[index + 1 % self.count]
+    }
+
+    func opposite(element: Element) -> Element {
+        let index = self.index(of: element)!
+        let count = self.count
+        return self[(index + (count/2)) % count]
     }
 }
