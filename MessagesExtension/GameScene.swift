@@ -263,6 +263,40 @@ class GameScene: SKScene {
             }
         }
     }
+
+    func scoreFor(color: MarbleColor) -> Int {
+        var score = 0
+
+        let homeIndices: [MarbleIndex]
+        let homeColor = MarbleColor.allColors.opposite(element: color)
+
+        switch homeColor {
+        case .blue:
+            homeIndices = blueStartingIndices
+
+        case .red:
+            homeIndices = redStartingIndices
+        default:
+            print("Todo")
+            homeIndices = blueStartingIndices // Temporary to please compiler gods
+        }
+
+        for index in homeIndices {
+            if let marble = gameBoard[index.row][index.column] {
+                if marble.marbleColor == color {
+                    score += 1
+                }
+            }
+        }
+
+        if score == homeIndices.count {
+            score = -1
+        }
+
+        print("Score for \(color) is \(score)")
+
+        return score
+    }
 }
 
 extension Array {

@@ -274,6 +274,13 @@ class MessagesViewController: MSMessagesAppViewController {
         nextGameState!.command = .move
         nextGameState?.playerColor = MarbleColor(rawValue: nextGameState!.players![currentConversation.localParticipantIdentifier.uuidString]!)
         nextGameState?.move = (from, to)
+
+        let score = gameScene.scoreFor(color: nextGameState!.playerColor)
+        print(score)
+        if score == -1 {
+            print("I win")
+        }
+        
         sendReply(session: currentConversation.selectedMessage!.session!)
     }
 }
