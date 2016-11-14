@@ -10,11 +10,14 @@ import Foundation
 import SpriteKit
 
 enum MarbleColor: String {
-    case blue
-    case green
     case red
+    case green
+    case orange
+    case blue
+    case cyan
+    case yellow
 
-    static let allColors = [MarbleColor.blue, .green, .red]
+    static let allColors = [MarbleColor.red, .green, .orange, .blue, .cyan, .yellow]
 }
 
 class GameScene: SKScene {
@@ -31,6 +34,9 @@ class GameScene: SKScene {
     // swiftlint:disable comma
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
+
+    let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7)), MarbleIndex(( 4, 4)), MarbleIndex(( 4, 5)), MarbleIndex(( 4, 6)), MarbleIndex(( 4, 7)), MarbleIndex(( 4, 8))]
+    let blueStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7)), MarbleIndex((12, 4)), MarbleIndex((12, 5)), MarbleIndex((12, 6)), MarbleIndex((12, 7)), MarbleIndex((12, 8))]
 
     var gameBoard = [[MarbleNode?]]()
 
@@ -82,14 +88,11 @@ class GameScene: SKScene {
 
         gameBoard = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
 
-        let player0StartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7)), MarbleIndex(( 4, 4)), MarbleIndex(( 4, 5)), MarbleIndex(( 4, 6)), MarbleIndex(( 4, 7)), MarbleIndex(( 4, 8))]
-        let player1StartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7)), MarbleIndex((12, 4)), MarbleIndex((12, 5)), MarbleIndex((12, 6)), MarbleIndex((12, 7)), MarbleIndex((12, 8))]
-
-        for index in player0StartingIndices {
-            drawMarbleAt(index: index, color: .blue)
-        }
-        for index in player1StartingIndices {
+        for index in redStartingIndices {
             drawMarbleAt(index: index, color: .red)
+        }
+        for index in blueStartingIndices {
+            drawMarbleAt(index: index, color: .blue)
         }
     }
 
