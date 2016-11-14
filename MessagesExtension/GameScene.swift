@@ -234,6 +234,9 @@ class GameScene: SKScene {
 
         gameBoard[from.row][from.column] = nil
         gameBoard[to.row][to.column]!.position = coordinatesFor(index: to)
+    }
+
+    func saveGameBoard() {
         UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: gameBoard), forKey: MessagesViewController.sharedMessagesViewController.currentGameIdentifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString)
     }
 

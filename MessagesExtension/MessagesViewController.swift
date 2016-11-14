@@ -177,6 +177,7 @@ class MessagesViewController: MSMessagesAppViewController {
         if presentationStyle == .expanded {
             currentGameIdentifier = currentConversation.selectedMessage?.url?.path
             showGameScene(identifier: currentGameIdentifier)
+            handle(newMessage: currentConversation.selectedMessage!, forConversation: currentConversation)
         } else {
             startGameButton.isHidden = false
             gameView.isHidden = true
@@ -189,6 +190,8 @@ class MessagesViewController: MSMessagesAppViewController {
         let url = URL(string: "\(currentGameIdentifier!)?\(nextGameState!)")!
         newGameMessage.url = url
         currentConversation.insert(newGameMessage, completionHandler: nil)
+        GameScene.sharedGame?.saveGameBoard()
+        dismiss()
     }
 
     @IBAction func startGame(_ sender: Any) {
@@ -231,6 +234,14 @@ class MessagesViewController: MSMessagesAppViewController {
 
         nextGameState = GameState()
         let previousGameState = GameState(description: query)
+
+        if let previousMessageColorString = previousGameState.players[conversation.localParticipantIdentifier.uuidString] {
+            guard previousGameState.playerColor != MarbleColor(rawValue: previousMessageColorString) else {
+                // This means we clicked on our own message
+                // So we shouldn't replay the last move
+                return
+            }
+        }
 
         switch previousGameState.command! {
         case .newGame:
