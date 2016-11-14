@@ -155,6 +155,10 @@ class MessagesViewController: MSMessagesAppViewController {
 
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
         // Called when the user taps the send button.
+
+        let key = message.url!.path + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString
+        let board = UserDefaults.standard.object(forKey: key + "new")
+        UserDefaults.standard.set(board, forKey: key)
     }
 
     override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
