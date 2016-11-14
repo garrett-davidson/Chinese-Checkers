@@ -238,7 +238,7 @@ class GameScene: SKScene {
     }
 
     func saveGameBoard() {
-        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: gameBoard), forKey: MessagesViewController.sharedMessagesViewController.currentGameIdentifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: gameBoard), forKey: MessagesViewController.sharedMessagesViewController.currentGameIdentifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString + "new")
     }
 
     func drawCoordinateLabel(forIndex index: MarbleIndex) {
