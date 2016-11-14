@@ -10,21 +10,21 @@ import Foundation
 import SpriteKit
 
 enum MarbleColor: String {
-    case blue
+    case purple
     case green
     case red
 
-    static let allColors = [MarbleColor.blue, .green, .red]
+    static let allColors = [MarbleColor.purple, .green, .red]
 }
 
 class GameScene: SKScene {
 
     static var sharedGame: GameScene!
 
-    let dx = CGFloat(12.3)
-    let dy = CGFloat(-21.25)
+    let dx = CGFloat(12.15)
+    let dy = CGFloat(-23.9)
     let startX = CGFloat(0)
-    let startY = CGFloat(170)
+    let startY = CGFloat(192)
     let boardWidth = 13
     let boardHeight = 17
 
@@ -86,10 +86,10 @@ class GameScene: SKScene {
         let player1StartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7)), MarbleIndex((12, 4)), MarbleIndex((12, 5)), MarbleIndex((12, 6)), MarbleIndex((12, 7)), MarbleIndex((12, 8))]
 
         for index in player0StartingIndices {
-            drawMarbleAt(index: index, color: .blue)
+            drawMarbleAt(index: index, color: .red)
         }
         for index in player1StartingIndices {
-            drawMarbleAt(index: index, color: .red)
+            drawMarbleAt(index: index, color: .purple)
         }
     }
 
@@ -103,7 +103,7 @@ class GameScene: SKScene {
         }
     }
 
-    func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 15) -> MarbleNode {
+    func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 21) -> MarbleNode {
         let marbleSprite = MarbleNode(color: color)
         marbleSprite.size = CGSize(width: radius, height: radius)
         marbleSprite.position = point
@@ -207,9 +207,10 @@ class GameScene: SKScene {
             return nil
         }
 
-        let highlightNode = HighlightNode(color: .green, size: CGSize(width: 15, height: 15))
+        let highlightNode = HighlightNode(texture: SKTexture(imageNamed: "green"))
         highlightNode.position = coordinatesFor(index: index)
         highlightNode.isUserInteractionEnabled = true
+        highlightNode.alpha = 0.7
         self.addChild(highlightNode)
 
         return highlightNode

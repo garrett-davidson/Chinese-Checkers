@@ -196,7 +196,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
     @IBAction func startGame(_ sender: Any) {
         let newGameSession = MSSession()
-        nextGameState = GameState(command: .newGame, playerColor: .blue, players: [currentConversation.localParticipantIdentifier.uuidString: MarbleColor.blue.rawValue])
+        nextGameState = GameState(command: .newGame, playerColor: .red, players: [currentConversation.localParticipantIdentifier.uuidString: MarbleColor.red.rawValue])
 
         currentGameIdentifier = UUID().uuidString
 
