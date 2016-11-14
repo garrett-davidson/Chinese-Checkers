@@ -24,10 +24,10 @@ class GameScene: SKScene {
 
     static var sharedGame: GameScene!
 
-    let dx = CGFloat(12.15)
-    let dy = CGFloat(-23.9)
-    let startX = CGFloat(0)
-    let startY = CGFloat(192)
+    let dx = CGFloat(12)
+    let dy = CGFloat(-21.67)
+    var startX = CGFloat(0)
+    var startY = CGFloat(173.60)
     let boardWidth = 13
     let boardHeight = 17
 

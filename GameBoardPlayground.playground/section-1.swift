@@ -3,9 +3,9 @@ import XCPlayground
 import PlaygroundSupport
 
 let dx = CGFloat(12)
-let dy = CGFloat(-21.16)
+let dy = CGFloat(-21.67)
 var startX = CGFloat(0)
-var startY = CGFloat(170)
+var startY = CGFloat(173.60)
 
 enum MarbleColor: String {
     case red
@@ -55,7 +55,7 @@ let scene = SKScene(fileNamed: "GameScene")!
 scene.scaleMode = SKSceneScaleMode.aspectFit
 view.presentScene(scene)
 
-func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 12) -> MarbleNode {
+func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 15) -> MarbleNode {
     let marbleSprite = MarbleNode(color: color)
     marbleSprite.size = CGSize(width: radius, height: radius)
     marbleSprite.position = point
@@ -131,7 +131,7 @@ let boardWidth = 13
 let boardHeight = 17
 
 let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
-let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
+let rowStarts = [6, 5, 5, 4, 0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
 
 func isValid(index: MarbleIndex) -> Bool {
     guard index.row >= 0 && index.row < boardHeight else {
@@ -145,7 +145,7 @@ func isValid(index: MarbleIndex) -> Bool {
     return ((rowStarts[index.row])..<(rowStarts[index.row] + rowWidths[index.row])).contains(index.column)
 }
 
-for i in 0..<15 {
+for i in 0..<17 {
     for j in 0..<boardWidth {
         let index = MarbleIndex((i, j))
         if isValid(index: index) {
