@@ -24,6 +24,7 @@ class MessagesViewController: MSMessagesAppViewController {
     enum GameCommand: String {
         case newGame
         case move
+        case gameOver
     }
 
     enum GameStateParameter: String {
@@ -247,6 +248,13 @@ class MessagesViewController: MSMessagesAppViewController {
             }
         }
 
+        func playMove() {
+            let move = previousGameState.move!
+            nextGameState?.players = previousGameState.players
+            nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
+            GameScene.sharedGame.moveMarble(from: move.0, to: move.1)
+        }
+
         switch previousGameState.command! {
         case .newGame:
             // Append my color/uuid to the player list
@@ -263,10 +271,13 @@ class MessagesViewController: MSMessagesAppViewController {
 
         case .move:
             print("Move")
-            let move = previousGameState.move!
-            nextGameState?.players = previousGameState.players
-            nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
-            GameScene.sharedGame.moveMarble(from: move.0, to: move.1)
+            playMove()
+
+        case .gameOver:
+            playMove()
+            print("I lost")
+            // todo: Don't allow any more moves. Show gameover UI. Keep score?
+            nextGameState = nil
         }
     }
 
@@ -279,6 +290,9 @@ class MessagesViewController: MSMessagesAppViewController {
         print(score)
         if score == -1 {
             print("I win")
+            nextGameState!.command = .gameOver
+            let totalWins = UserDefaults.standard.integer(forKey: "totalWins")
+            UserDefaults.standard.set(totalWins + 1, forKey: "totalWins")
         }
 
         sendReply(session: currentConversation.selectedMessage!.session!)

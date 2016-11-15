@@ -42,9 +42,12 @@ class GameScene: SKScene {
 
     var selectedMarble: MarbleNode? {
         didSet {
+            guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
+                return
+            }
             // todo: Validate that you own this marble
             if selectedMarble != nil {
-                if selectedMarble!.marbleColor != MessagesViewController.sharedMessagesViewController.nextGameState!.playerColor {
+                if selectedMarble!.marbleColor != gameState.playerColor {
                     selectedMarble = oldValue
                     return
                 }
@@ -248,7 +251,7 @@ class GameScene: SKScene {
     func drawCoordinateLabel(forIndex index: MarbleIndex) {
         let node = SKLabelNode(text: "\(index)")
         node.position = coordinatesFor(index: index)
-        node.fontColor = .black
+        node.fontColor = .white
         node.fontSize = 10
 
         self.addChild(node)
