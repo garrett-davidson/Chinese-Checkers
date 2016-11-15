@@ -126,7 +126,7 @@ class GameScene: SKScene {
     }
 
     func indexFrom(point: CGPoint) -> MarbleIndex {
-        let row = Int((point.y - startY) / dy)
+        let row = Int(round((point.y - startY) / dy))
         var column = row % 2 == 0 ? point.x : point.x - dx
         column = (((column - startX) / 2) / dx) + 6
 
