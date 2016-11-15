@@ -110,7 +110,7 @@ class MessagesViewController: MSMessagesAppViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        winLabel.text = "Wins: "
+        winLabel.text = "Wins: \(UserDefaults.standard.integer(forKey: "totalWins"))"
         MessagesViewController.sharedMessagesViewController = self
     }
 
@@ -135,7 +135,7 @@ class MessagesViewController: MSMessagesAppViewController {
             showGameScene(identifier: currentGameIdentifier)
             handle(newMessage: currentConversation.selectedMessage!, forConversation: conversation)
         } else {
-            startGameView.isHidden = true
+            startGameView.isHidden = false
             gameView.isHidden = true
         }
     }

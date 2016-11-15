@@ -31,6 +31,9 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wood Background" translatesAutoresizingMaskIntoConstraints="NO" id="ajR-rU-myJ">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                                     </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChineseCheckersLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Ufd-9Y-e0C">
+                                        <rect key="frame" x="40" y="175" width="240" height="60"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5R1-Kb-FqK">
                                         <rect key="frame" x="40" y="195" width="240" height="138"/>
                                         <constraints>
@@ -41,28 +44,26 @@
                                             <action selector="startGame:" destination="ObA-dk-sSI" eventType="touchUpInside" id="3K5-Ld-Hfv"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChineseCheckersLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Ufd-9Y-e0C">
-                                        <rect key="frame" x="40" y="170" width="240" height="60"/>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoR-xx-4Uo">
-                                        <rect key="frame" x="279.5" y="327.5" width="0.0" height="0.0"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoR-xx-4Uo">
+                                        <rect key="frame" x="60" y="303" width="0.0" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="UoR-xx-4Uo" secondAttribute="bottom" constant="200" id="CSE-cg-TgY"/>
-                                    <constraint firstItem="Ufd-9Y-e0C" firstAttribute="top" secondItem="2Cl-8x-TOZ" secondAttribute="top" constant="170" id="ElJ-gb-9ra"/>
+                                    <constraint firstItem="Ufd-9Y-e0C" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" constant="40" id="ADN-vv-TV3"/>
                                     <constraint firstItem="ajR-rU-myJ" firstAttribute="top" secondItem="2Cl-8x-TOZ" secondAttribute="top" id="G8c-B5-lDL"/>
-                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="leading" secondItem="Ufd-9Y-e0C" secondAttribute="leading" id="I9c-8V-WDV"/>
                                     <constraint firstAttribute="bottom" secondItem="ajR-rU-myJ" secondAttribute="bottom" id="J4Z-85-OhB"/>
-                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerX" secondItem="ajR-rU-myJ" secondAttribute="centerX" id="NWA-au-zvC"/>
+                                    <constraint firstItem="UoR-xx-4Uo" firstAttribute="top" secondItem="5R1-Kb-FqK" secondAttribute="bottom" constant="-30" id="POM-1i-IeN"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="top" secondItem="Ufd-9Y-e0C" secondAttribute="bottom" constant="-40" id="SaY-mY-IZX"/>
                                     <constraint firstItem="ajR-rU-myJ" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" id="bfI-5I-4ef"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerX" secondItem="ajR-rU-myJ" secondAttribute="centerX" id="gbJ-0p-e7w"/>
+                                    <constraint firstItem="UoR-xx-4Uo" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" constant="60" id="ldU-w0-o1W"/>
                                     <constraint firstAttribute="trailing" secondItem="ajR-rU-myJ" secondAttribute="trailing" id="oLI-q2-faU"/>
-                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerY" secondItem="ajR-rU-myJ" secondAttribute="centerY" id="pzH-01-fOW"/>
-                                    <constraint firstAttribute="trailing" secondItem="UoR-xx-4Uo" secondAttribute="trailing" constant="40" id="rzf-YQ-99g"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerY" secondItem="ajR-rU-myJ" secondAttribute="centerY" id="oqa-ca-Z2k"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ufd-9Y-e0C" secondAttribute="trailing" constant="40" id="yVm-DO-Ize"/>
                                 </constraints>
                             </view>
                         </subviews>
