@@ -150,10 +150,9 @@ class GameScene: SKScene {
         let index = indexFrom(point: marble.position)
 
         clearHighlights()
-        knownJumps = [index]
 
         highligtAdjacentSpotsForMarbleAt(index: index)
-        knownJump = highlightJumpsForMarbleAt(index: index)
+        knownJumps = highlightJumpsForMarbleAt(index: index)
     }
 
     func clearHighlights() {
@@ -181,23 +180,21 @@ class GameScene: SKScene {
         highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downRight()))
     }
 
-    var knownJumps = [MarbleIndex]()
-    var knownJump = MarbleJump(index: MarbleIndex((0, 0)))
+    var knownJumps = MarbleJump(index: MarbleIndex((0, 0)))
     func highlightJumpsForMarbleAt(index: MarbleIndex) -> MarbleJump {
 
-        let directions = [MarbleIndex.left, MarbleIndex.right, MarbleIndex.upLeft, MarbleIndex.upRight, MarbleIndex.downLeft, MarbleIndex.downRight]
+        let directions = MarbleIndex.directions
 
         let jump = MarbleJump(index: index)
         for i in 0..<directions.count {
             let direction = directions[i]
             let indexOfDirection = direction(index)()
             if marbleExistsAt(index: indexOfDirection) {
-                let directionalJump = direction(indexOfDirection)()
-                if !knownJumps.contains(where: { (e) -> Bool in e == directionalJump }) {
-                    if let highlightNode = highlightIfEmptyAt(index: directionalJump) {
-                        knownJumps.append(directionalJump)
+                let directionalJumpIndex = direction(indexOfDirection)()
+                if knownJumps.pathToIndex(index: directionalJumpIndex) == nil {
+                    if let highlightNode = highlightIfEmptyAt(index: directionalJumpIndex) {
                         highlightNodes.append(highlightNode)
-                        let newJump = highlightJumpsForMarbleAt(index: directionalJump)
+                        let newJump = highlightJumpsForMarbleAt(index: directionalJumpIndex)
                         switch i {
                         case 0:
                             jump.leftJump = newJump
@@ -274,7 +271,7 @@ class GameScene: SKScene {
             mutablePath.addLine(to: from.coordinates)
             marblePath = mutablePath
         } else {
-            marblePath = knownJump.pathToIndex(index: to)!
+            marblePath = knownJumps.pathToIndex(index: to)!
         }
 
         let moveAction = SKAction.follow(marblePath, speed: 70).reversed()
@@ -362,7 +359,7 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
         }
     }
 
-    var directions: [()->MarbleIndex] {
+    static var directions: [(MarbleIndex) -> () -> MarbleIndex] {
         get {
             return [left, right, upLeft, upRight, downLeft, downRight]
         }
@@ -414,8 +411,8 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
     }
 
     func isAdjacent(to: MarbleIndex) -> Bool {
-        for direction in directions {
-            if to == direction() {
+        for direction in MarbleIndex.directions {
+            if to == direction(self)() {
                 return true
             }
         }
