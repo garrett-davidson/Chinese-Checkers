@@ -11,23 +11,23 @@ import SpriteKit
 
 enum MarbleColor: String {
     case red
-    case green
-    case orange
     case purple
-    case cyan
+    case blue
+    case green
     case yellow
+    case orange
 
-    static let allColors = [MarbleColor.red, .green, .orange, .purple, .cyan, .yellow]
+    static let allColors = [MarbleColor.red, .purple, .blue, .green, .yellow, .orange]
 }
 
 class GameScene: SKScene {
 
     static var sharedGame: GameScene!
 
-    let dx = CGFloat(12)
-    let dy = CGFloat(-21.67)
+    let dx = CGFloat(11.5)
+    let dy = CGFloat(-20)
     var startX = CGFloat(0)
-    var startY = CGFloat(173.60)
+    var startY = CGFloat(160) // Must equal -8 * dy
     let boardWidth = 13
     let boardHeight = 17
 
@@ -35,8 +35,8 @@ class GameScene: SKScene {
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
 
-    let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7)), MarbleIndex(( 4, 4)), MarbleIndex(( 4, 5)), MarbleIndex(( 4, 6)), MarbleIndex(( 4, 7)), MarbleIndex(( 4, 8))]
-    let purpleStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7)), MarbleIndex((12, 4)), MarbleIndex((12, 5)), MarbleIndex((12, 6)), MarbleIndex((12, 7)), MarbleIndex((12, 8))]
+    let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7))]
+    let purpleStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
 
     var gameBoard = [[MarbleNode?]]()
 
@@ -96,7 +96,7 @@ class GameScene: SKScene {
         }
 
         for index in purpleStartingIndices {
-            drawMarbleAt(index: index, color: .purple)
+            drawMarbleAt(index: index, color: .green)
         }
     }
 
@@ -110,7 +110,7 @@ class GameScene: SKScene {
         }
     }
 
-    func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 21) -> MarbleNode {
+    func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 19) -> MarbleNode {
         let marbleSprite = MarbleNode(color: color)
         marbleSprite.size = CGSize(width: radius, height: radius)
         marbleSprite.position = point

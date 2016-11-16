@@ -260,7 +260,7 @@ class MessagesViewController: MSMessagesAppViewController {
             // Append my color/uuid to the player list
             print("New game")
             var previousPlayers = previousGameState.players
-            for color in [MarbleColor.red, .purple, .green, .cyan, .orange, .yellow] {
+            for color in [MarbleColor.red, .green, .purple, .yellow, .blue, .orange] {
                 if !(previousPlayers!.values.contains(color.rawValue)) {
                     nextGameState?.playerColor = color
                     previousPlayers![conversation.localParticipantIdentifier.uuidString] = color.rawValue
@@ -276,7 +276,7 @@ class MessagesViewController: MSMessagesAppViewController {
         case .gameOver:
             playMove()
             print("I lost")
-            // todo: Don't allow any more moves. Show gameover UI. Keep score?
+            // todo: Show gameover UI.
             nextGameState = nil
         }
     }

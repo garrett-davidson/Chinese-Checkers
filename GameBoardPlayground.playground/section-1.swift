@@ -2,10 +2,10 @@ import SpriteKit
 import XCPlayground
 import PlaygroundSupport
 
-let dx = CGFloat(12)
-let dy = CGFloat(-21.67)
+let dx = CGFloat(11.5)
+let dy = CGFloat(-20)
 var startX = CGFloat(0)
-var startY = CGFloat(173.60)
+var startY = -8 * dy
 
 enum MarbleColor: String {
     case red
@@ -25,7 +25,7 @@ class MarbleNode: SKSpriteNode {
     init(color: MarbleColor) {
         self.marbleColor = color
         let texture = SKTexture(imageNamed: color.rawValue)
-        super.init(texture: texture, color: .clear, size: texture.size())
+        super.init(texture: texture, color: .clear, size: CGSize(width: 16, height: 16))
     }
 
     required convenience init?(coder aDecoder: NSCoder) {
@@ -55,7 +55,7 @@ let scene = SKScene(fileNamed: "GameScene")!
 scene.scaleMode = SKSceneScaleMode.aspectFit
 view.presentScene(scene)
 
-func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 15) -> MarbleNode {
+func drawMarble(atPoint point: CGPoint, color: MarbleColor, radius: CGFloat = 19) -> MarbleNode {
     let marbleSprite = MarbleNode(color: color)
     marbleSprite.size = CGSize(width: radius, height: radius)
     marbleSprite.position = point
@@ -145,11 +145,11 @@ func isValid(index: MarbleIndex) -> Bool {
     return ((rowStarts[index.row])..<(rowStarts[index.row] + rowWidths[index.row])).contains(index.column)
 }
 
-for i in 0..<17 {
+for i in 0..<5 {
     for j in 0..<boardWidth {
         let index = MarbleIndex((i, j))
         if isValid(index: index) {
-            drawMarbleAt(index: index, color: .red)
+            drawMarbleAt(index: index, color: .orange)
         }
     }
 }
