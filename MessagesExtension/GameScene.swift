@@ -20,16 +20,16 @@ enum MarbleColor: String {
     static let allColors = [MarbleColor.red, .purple, .blue, .green, .yellow, .orange]
 }
 
+let dx = CGFloat(11.5)
+let dy = CGFloat(-20)
+var startX = CGFloat(0)
+var startY = CGFloat(160) // Must equal -8 * dy
+let boardWidth = 13
+let boardHeight = 17
+
 class GameScene: SKScene {
 
     static var sharedGame: GameScene!
-
-    let dx = CGFloat(11.5)
-    let dy = CGFloat(-20)
-    var startX = CGFloat(0)
-    var startY = CGFloat(160) // Must equal -8 * dy
-    let boardWidth = 13
-    let boardHeight = 17
 
     // swiftlint:disable comma
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
@@ -120,14 +120,6 @@ class GameScene: SKScene {
         return marbleSprite
     }
 
-    func coordinatesFor(index: MarbleIndex) -> CGPoint {
-        let y = startY + (dy * CGFloat(index.row))
-        var x = startX + ((dx * CGFloat(index.column - 6)) * 2)
-        if index.row % 2 == 1 { x += dx }
-
-        return CGPoint(x: x, y: y)
-    }
-
     func indexFrom(point: CGPoint) -> MarbleIndex {
         let row = Int(round((point.y - startY) / dy))
         var column = row % 2 == 0 ? point.x : point.x - dx
@@ -137,7 +129,7 @@ class GameScene: SKScene {
     }
 
     func drawMarbleAt(index: MarbleIndex, color: MarbleColor) {
-        gameBoard[index.row][index.column] = drawMarble(atPoint: coordinatesFor(index: index), color: color)
+        gameBoard[index.row][index.column] = drawMarble(atPoint: index.coordinates, color: color)
     }
 
     func isValid(index: MarbleIndex) -> Bool {
@@ -215,7 +207,7 @@ class GameScene: SKScene {
         }
 
         let highlightNode = HighlightNode()
-        highlightNode.position = coordinatesFor(index: index)
+        highlightNode.position = index.coordinates
         highlightNode.isUserInteractionEnabled = true
 //        highlightNode.alpha = 0.7
         self.addChild(highlightNode)
@@ -250,7 +242,7 @@ class GameScene: SKScene {
 
     func drawCoordinateLabel(forIndex index: MarbleIndex) {
         let node = SKLabelNode(text: "\(index)")
-        node.position = coordinatesFor(index: index)
+        node.position = index.coordinates
         node.fontColor = .white
         node.fontSize = 10
 
@@ -319,6 +311,16 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
     var description: String {
         get {
             return "(\(row),\(column))"
+        }
+    }
+
+    var coordinates: CGPoint {
+        get {
+            let y = startY + (dy * CGFloat(row))
+            var x = startX + ((dx * CGFloat(column - 6)) * 2)
+            if row % 2 == 1 { x += dx }
+
+            return CGPoint(x: x, y: y)
         }
     }
 
