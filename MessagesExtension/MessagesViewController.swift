@@ -198,9 +198,23 @@ class MessagesViewController: MSMessagesAppViewController {
 
         let url = URL(string: "\(currentGameIdentifier!)?\(nextGameState!)")!
         newGameMessage.url = url
+
+        let layout = MSMessageTemplateLayout()
+        layout.image = getScreenshot()
+
+        newGameMessage.layout = layout
+
         currentConversation.insert(newGameMessage, completionHandler: nil)
         GameScene.sharedGame?.saveGameBoard()
         dismiss()
+    }
+
+    func getScreenshot() -> UIImage {
+        let size = CGSize(width: 300, height: 450)
+        UIGraphicsBeginImageContextWithOptions(size, true, 0.0)
+        let rect = CGRect(origin: CGPoint(x: 0, y: -100), size: gameView.bounds.size)
+        gameView.drawHierarchy(in: rect, afterScreenUpdates: true)
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 
     @IBAction func startGame(_ sender: Any) {
