@@ -206,7 +206,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
         currentConversation.insert(newGameMessage, completionHandler: nil)
         GameScene.sharedGame?.saveGameBoard()
-        dismiss()
+//        dismiss()
     }
 
     func getScreenshot() -> UIImage {
