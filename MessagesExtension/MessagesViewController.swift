@@ -41,14 +41,18 @@ class MessagesViewController: MSMessagesAppViewController {
     struct GameState: CustomStringConvertible {
         var command: GameCommand!
         var playerColor: MarbleColor!
-        var move: (MarbleIndex, MarbleIndex)?
+        var move: (MarbleIndex, MarbleIndex, CGPath)?
         var players: [String: String]!
 
         var description: String {
             get {
                 var ret = "\(GameStateParameter.command)=\(command!);\(GameStateParameter.playerColor)=\(playerColor!);\(GameStateParameter.players)=\(players.toBase64String()!)"
                 if move != nil {
-                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1)"
+                    let bezierPath = UIBezierPath(cgPath: move!.2)
+                    let bezierPathData = NSKeyedArchiver.archivedData(withRootObject: bezierPath)
+                    let bezierPathDataString = bezierPathData.base64EncodedString()
+
+                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1):\(bezierPathDataString)"
                 }
                 return ret
             }
@@ -60,7 +64,7 @@ class MessagesViewController: MSMessagesAppViewController {
             self.move = nil
             self.players = nil
         }
-        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex)? = nil) {
+        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex, CGPath)? = nil) {
             self.command = command
             self.playerColor = playerColor
             self.players = players
@@ -99,7 +103,10 @@ class MessagesViewController: MSMessagesAppViewController {
                     let movePositions = values[1].components(separatedBy: ":")
                     let from = MarbleIndex(string: movePositions[0])
                     let to = MarbleIndex(string: movePositions[1])
-                    self.move = (from, to)
+                    let bezierPathDataString = movePositions[2] + String(repeating: "=", count: values.count-2)
+                    let bezierPathData = Data(base64Encoded: bezierPathDataString)!
+                    let bezierPath = NSKeyedUnarchiver.unarchiveObject(with: bezierPathData) as! UIBezierPath
+                    self.move = (from, to, bezierPath.cgPath)
                 }
             }
         }
@@ -269,7 +276,7 @@ class MessagesViewController: MSMessagesAppViewController {
             let move = previousGameState.move!
             nextGameState?.players = previousGameState.players
             nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
-            GameScene.sharedGame.moveMarble(from: move.0, to: move.1)
+            GameScene.sharedGame.moveMarble(from: move.0, to: move.1, path: move.2)
         }
 
         switch previousGameState.command! {
@@ -298,10 +305,10 @@ class MessagesViewController: MSMessagesAppViewController {
         }
     }
 
-    func sendMove(from: MarbleIndex, to: MarbleIndex) {
+    func sendMove(from: MarbleIndex, to: MarbleIndex, path: CGPath) {
         nextGameState!.command = .move
         nextGameState?.playerColor = MarbleColor(rawValue: nextGameState!.players![currentConversation.localParticipantIdentifier.uuidString]!)
-        nextGameState?.move = (from, to)
+        nextGameState?.move = (from, to, path)
 
         let score = gameScene.scoreFor(color: nextGameState!.playerColor)
         print(score)

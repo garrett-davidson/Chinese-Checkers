@@ -252,23 +252,36 @@ class GameScene: SKScene {
     func moveSelectedMarble(toIndex newIndex: MarbleIndex) {
         let currentIndex = indexFrom(point: selectedMarble!.position)
 
-        moveMarble(from: currentIndex, to: newIndex)
-        MessagesViewController.sharedMessagesViewController.sendMove(from: currentIndex, to: newIndex)
+        let path = moveMarble(from: currentIndex, to: newIndex)
+        MessagesViewController.sharedMessagesViewController.sendMove(from: currentIndex, to: newIndex, path: path)
     }
 
-    func moveMarble(from: MarbleIndex, to: MarbleIndex) {
+    @discardableResult
+    func moveMarble(from: MarbleIndex, to: MarbleIndex, path: CGPath? = nil) -> CGPath {
         gameBoard[to.row][to.column] = gameBoard[from.row][from.column]!
 
         gameBoard[from.row][from.column] = nil
 
-        guard let path = knownJump.pathToIndex(index: to) else {
-            print("Move finding fucked up")
-            return
+        let marblePath: CGPath
+
+        if path != nil {
+            marblePath = path!
+        } else if from.isAdjacent(to: to) {
+            let mutablePath = CGMutablePath()
+
+            // This path is intentionally backwards because we reverse it later
+            mutablePath.move(to: to.coordinates)
+            mutablePath.addLine(to: from.coordinates)
+            marblePath = mutablePath
+        } else {
+            marblePath = knownJump.pathToIndex(index: to)!
         }
 
-        let moveAction = SKAction.follow(path, speed: 70).reversed()
+        let moveAction = SKAction.follow(marblePath, speed: 70).reversed()
         gameBoard[to.row][to.column]!.unHighlight()
         gameBoard[to.row][to.column]!.run(moveAction)
+
+        return marblePath
     }
 
     func saveGameBoard() {
@@ -349,6 +362,12 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
         }
     }
 
+    var directions: [()->MarbleIndex] {
+        get {
+            return [left, right, upLeft, upRight, downLeft, downRight]
+        }
+    }
+
     var coordinates: CGPoint {
         get {
             let y = startY + (dy * CGFloat(row))
@@ -392,6 +411,16 @@ struct MarbleIndex: Equatable, CustomStringConvertible {
 
     func downRight() -> MarbleIndex {
         return MarbleIndex((row + 1, column + (row % 2)))
+    }
+
+    func isAdjacent(to: MarbleIndex) -> Bool {
+        for direction in directions {
+            if to == direction() {
+                return true
+            }
+        }
+
+        return false
     }
 
     public static func == (lhs: MarbleIndex, rhs: MarbleIndex) -> Bool {
