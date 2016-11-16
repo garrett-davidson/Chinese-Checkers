@@ -214,10 +214,10 @@ class GameScene: SKScene {
             return nil
         }
 
-        let highlightNode = HighlightNode(texture: SKTexture(imageNamed: "green"))
+        let highlightNode = HighlightNode()
         highlightNode.position = coordinatesFor(index: index)
         highlightNode.isUserInteractionEnabled = true
-        highlightNode.alpha = 0.7
+//        highlightNode.alpha = 0.7
         self.addChild(highlightNode)
 
         return highlightNode
