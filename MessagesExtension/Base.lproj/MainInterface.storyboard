@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11760" systemVersion="16C41b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ObA-dk-sSI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11755"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -25,29 +25,69 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5R1-Kb-FqK">
-                                <rect key="frame" x="121" y="249" width="78" height="30"/>
-                                <state key="normal" title="Start Game"/>
-                                <connections>
-                                    <action selector="startGame:" destination="ObA-dk-sSI" eventType="touchUpInside" id="3K5-Ld-Hfv"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Cl-8x-TOZ">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wood Background" translatesAutoresizingMaskIntoConstraints="NO" id="ajR-rU-myJ">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChineseCheckersLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Ufd-9Y-e0C">
+                                        <rect key="frame" x="40" y="175" width="240" height="60"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5R1-Kb-FqK">
+                                        <rect key="frame" x="40" y="195" width="240" height="138"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="138" id="j9t-rR-UIw"/>
+                                        </constraints>
+                                        <state key="normal" image="CreateGameButton"/>
+                                        <connections>
+                                            <action selector="startGame:" destination="ObA-dk-sSI" eventType="touchUpInside" id="3K5-Ld-Hfv"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoR-xx-4Uo">
+                                        <rect key="frame" x="60" y="303" width="0.0" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Ufd-9Y-e0C" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" constant="40" id="ADN-vv-TV3"/>
+                                    <constraint firstItem="ajR-rU-myJ" firstAttribute="top" secondItem="2Cl-8x-TOZ" secondAttribute="top" id="G8c-B5-lDL"/>
+                                    <constraint firstAttribute="bottom" secondItem="ajR-rU-myJ" secondAttribute="bottom" id="J4Z-85-OhB"/>
+                                    <constraint firstItem="UoR-xx-4Uo" firstAttribute="top" secondItem="5R1-Kb-FqK" secondAttribute="bottom" constant="-30" id="POM-1i-IeN"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="top" secondItem="Ufd-9Y-e0C" secondAttribute="bottom" constant="-40" id="SaY-mY-IZX"/>
+                                    <constraint firstItem="ajR-rU-myJ" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" id="bfI-5I-4ef"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerX" secondItem="ajR-rU-myJ" secondAttribute="centerX" id="gbJ-0p-e7w"/>
+                                    <constraint firstItem="UoR-xx-4Uo" firstAttribute="leading" secondItem="2Cl-8x-TOZ" secondAttribute="leading" constant="60" id="ldU-w0-o1W"/>
+                                    <constraint firstAttribute="trailing" secondItem="ajR-rU-myJ" secondAttribute="trailing" id="oLI-q2-faU"/>
+                                    <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerY" secondItem="ajR-rU-myJ" secondAttribute="centerY" id="oqa-ca-Z2k"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ufd-9Y-e0C" secondAttribute="trailing" constant="40" id="yVm-DO-Ize"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="o9q-ZU-52G" firstAttribute="width" secondItem="zMn-AG-sqS" secondAttribute="width" id="8eK-cO-6eE"/>
                             <constraint firstItem="o9q-ZU-52G" firstAttribute="centerX" secondItem="zMn-AG-sqS" secondAttribute="centerX" id="9ZS-nu-Sgb"/>
-                            <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerY" secondItem="zMn-AG-sqS" secondAttribute="centerY" id="Jm2-R2-WEO"/>
                             <constraint firstItem="o9q-ZU-52G" firstAttribute="height" secondItem="zMn-AG-sqS" secondAttribute="height" id="Oci-gd-znt"/>
+                            <constraint firstAttribute="trailing" secondItem="2Cl-8x-TOZ" secondAttribute="trailing" id="OuB-kn-GRV"/>
                             <constraint firstItem="o9q-ZU-52G" firstAttribute="centerY" secondItem="zMn-AG-sqS" secondAttribute="centerY" id="c0j-Df-Za9"/>
-                            <constraint firstItem="5R1-Kb-FqK" firstAttribute="centerX" secondItem="zMn-AG-sqS" secondAttribute="centerX" id="sqV-BF-hPT"/>
+                            <constraint firstItem="n38-gi-rB5" firstAttribute="top" secondItem="2Cl-8x-TOZ" secondAttribute="bottom" id="dTZ-db-IIp"/>
+                            <constraint firstItem="2Cl-8x-TOZ" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leading" id="vtJ-Qc-7j9"/>
+                            <constraint firstItem="2Cl-8x-TOZ" firstAttribute="top" secondItem="zMn-AG-sqS" secondAttribute="top" id="zHj-CE-6gE"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="528"/>
                     <connections>
+                        <outlet property="checkersLogo" destination="Ufd-9Y-e0C" id="qQF-zD-chG"/>
                         <outlet property="gameView" destination="o9q-ZU-52G" id="ZcM-7l-iBm"/>
                         <outlet property="startGameButton" destination="5R1-Kb-FqK" id="fc1-Nk-U0I"/>
+                        <outlet property="startGameView" destination="2Cl-8x-TOZ" id="Ta9-bX-Kwu"/>
+                        <outlet property="winLabel" destination="UoR-xx-4Uo" id="P6p-zG-q4t"/>
+                        <outlet property="woodBackground" destination="ajR-rU-myJ" id="gQo-ok-2D5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -55,4 +95,9 @@
             <point key="canvasLocation" x="33.600000000000001" y="37.781109445277366"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ChineseCheckersLogo" width="240" height="60"/>
+        <image name="CreateGameButton" width="240" height="80"/>
+        <image name="Wood Background" width="960" height="1240"/>
+    </resources>
 </document>

@@ -12,6 +12,10 @@ import SpriteKit
 
 class MessagesViewController: MSMessagesAppViewController {
 
+    @IBOutlet weak var startGameView: UIView!
+    @IBOutlet weak var winLabel: UILabel!
+    @IBOutlet weak var woodBackground: UIImageView!
+    @IBOutlet weak var checkersLogo: UIImageView!
     var gameScene: GameScene!
     var currentConversation: MSConversation!
     var currentGameIdentifier: String?
@@ -106,7 +110,7 @@ class MessagesViewController: MSMessagesAppViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-
+        winLabel.text = "Wins: \(UserDefaults.standard.integer(forKey: "totalWins"))"
         MessagesViewController.sharedMessagesViewController = self
     }
 
@@ -131,7 +135,7 @@ class MessagesViewController: MSMessagesAppViewController {
             showGameScene(identifier: currentGameIdentifier)
             handle(newMessage: currentConversation.selectedMessage!, forConversation: conversation)
         } else {
-            startGameButton.isHidden = false
+            startGameView.isHidden = false
             gameView.isHidden = true
         }
     }
@@ -184,7 +188,7 @@ class MessagesViewController: MSMessagesAppViewController {
             showGameScene(identifier: currentGameIdentifier)
             handle(newMessage: currentConversation.selectedMessage!, forConversation: currentConversation)
         } else {
-            startGameButton.isHidden = false
+            startGameView.isHidden = false
             gameView.isHidden = true
         }
     }
@@ -212,8 +216,7 @@ class MessagesViewController: MSMessagesAppViewController {
         if gameScene == nil {
             loadGameScene(identifier: identifier)
         }
-
-        startGameButton.isHidden = true
+        startGameView.isHidden = true
         gameView.isHidden = false
         gameView.presentScene(gameScene)
     }

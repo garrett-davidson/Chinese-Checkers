@@ -131,7 +131,7 @@ let boardWidth = 13
 let boardHeight = 17
 
 let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
-let rowStarts = [6, 5, 5, 4, 0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
+let rowStarts = [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6]
 
 func isValid(index: MarbleIndex) -> Bool {
     guard index.row >= 0 && index.row < boardHeight else {
