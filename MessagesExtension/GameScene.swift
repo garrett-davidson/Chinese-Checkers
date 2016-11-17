@@ -160,6 +160,9 @@ class GameScene: SKScene {
             node.removeFromParent()
         })
         highlightNodes = []
+
+        knownJumps = MarbleJump(index: MarbleIndex((-1, -1)))
+        jumpableIndices = []
     }
 
     func marbleExistsAt(index: MarbleIndex) -> Bool {
@@ -180,8 +183,10 @@ class GameScene: SKScene {
         highlightNodes.appendOptional(newElement: highlightIfEmptyAt(index: index.downRight()))
     }
 
-    var knownJumps = MarbleJump(index: MarbleIndex((0, 0)))
+    var knownJumps = MarbleJump(index: MarbleIndex((-1, -1)))
+    var jumpableIndices = [MarbleIndex]()
     func highlightJumpsForMarbleAt(index: MarbleIndex) -> MarbleJump {
+        jumpableIndices.append(index)
 
         let directions = MarbleIndex.directions
 
@@ -191,7 +196,7 @@ class GameScene: SKScene {
             let indexOfDirection = direction(index)()
             if marbleExistsAt(index: indexOfDirection) {
                 let directionalJumpIndex = direction(indexOfDirection)()
-                if knownJumps.pathToIndex(index: directionalJumpIndex) == nil {
+                if !jumpableIndices.contains(directionalJumpIndex) {
                     if let highlightNode = highlightIfEmptyAt(index: directionalJumpIndex) {
                         highlightNodes.append(highlightNode)
                         let newJump = highlightJumpsForMarbleAt(index: directionalJumpIndex)
@@ -240,10 +245,10 @@ class GameScene: SKScene {
     }
 
     func moveTo(highlightNode: HighlightNode) {
-        clearHighlights()
-
         let index = indexFrom(point: highlightNode.position)
         moveSelectedMarble(toIndex: index)
+
+        clearHighlights()
     }
 
     func moveSelectedMarble(toIndex newIndex: MarbleIndex) {
@@ -254,15 +259,19 @@ class GameScene: SKScene {
     }
 
     @discardableResult
-    func moveMarble(from: MarbleIndex, to: MarbleIndex, path: CGPath? = nil) -> CGPath {
+    func moveMarble(from: MarbleIndex, to: MarbleIndex, path: [MarbleIndex]? = nil) -> [MarbleIndex] {
+        // This occasionally crashes and I have no idea
+        // Race condition somewhere?
         gameBoard[to.row][to.column] = gameBoard[from.row][from.column]!
 
         gameBoard[from.row][from.column] = nil
 
-        let marblePath: CGPath
+        let marblePath: CGMutablePath
+        let indices: [MarbleIndex]
 
         if path != nil {
-            marblePath = path!
+            marblePath = pathFrom(indices: path!) as! CGMutablePath
+            indices = path!
         } else if from.isAdjacent(to: to) {
             let mutablePath = CGMutablePath()
 
@@ -270,15 +279,26 @@ class GameScene: SKScene {
             mutablePath.move(to: to.coordinates)
             mutablePath.addLine(to: from.coordinates)
             marblePath = mutablePath
+            indices = [from, to]
         } else {
-            marblePath = knownJumps.pathToIndex(index: to)!
+            (marblePath, indices) = knownJumps.pathToIndex(index: to)!
         }
 
         let moveAction = SKAction.follow(marblePath, speed: 70).reversed()
         gameBoard[to.row][to.column]!.unHighlight()
         gameBoard[to.row][to.column]!.run(moveAction)
 
-        return marblePath
+        return indices
+    }
+
+    func pathFrom(indices: [MarbleIndex]) -> CGPath {
+        let path = CGMutablePath()
+        path.move(to: indices[0].coordinates)
+        for index in indices.dropFirst() {
+            path.addLine(to: index.coordinates)
+        }
+
+        return path
     }
 
     func saveGameBoard() {
