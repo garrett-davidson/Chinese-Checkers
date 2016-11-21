@@ -36,7 +36,7 @@ class GameScene: SKScene {
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
 
     let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7))]
-    let purpleStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
+    let greenStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
 
     var gameBoard = [[MarbleNode?]]()
 
@@ -95,7 +95,7 @@ class GameScene: SKScene {
             drawMarbleAt(index: index, color: .red)
         }
 
-        for index in purpleStartingIndices {
+        for index in greenStartingIndices {
             drawMarbleAt(index: index, color: .green)
         }
     }
@@ -334,13 +334,13 @@ class GameScene: SKScene {
 
         switch homeColor {
         case .purple:
-            homeIndices = purpleStartingIndices
+            homeIndices = greenStartingIndices
 
         case .red:
             homeIndices = redStartingIndices
         default:
             print("Todo")
-            homeIndices = purpleStartingIndices // Temporary to please compiler gods
+            homeIndices = greenStartingIndices // Temporary to please compiler gods
         }
 
         for index in homeIndices {
