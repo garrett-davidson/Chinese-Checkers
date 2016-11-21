@@ -41,6 +41,14 @@ class MarbleNode: SKSpriteNode {
     func unHighlight() {
         self.alpha = 1
     }
+
+    func moveToTop() {
+        self.zPosition = 100
+    }
+
+    func moveToMiddle() {
+        self.zPosition = 0
+    }
 }
 
 class MarbleJump {

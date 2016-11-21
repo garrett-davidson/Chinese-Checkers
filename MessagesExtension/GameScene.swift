@@ -302,7 +302,11 @@ class GameScene: SKScene {
             marblePath = pathFrom(indices: indices)
         }
 
-        let moveAction = SKAction.follow(marblePath, asOffset: false, orientToPath: false, speed: 70)
+        let a = SKAction.perform(Selector(("moveToTop")), onTarget: gameBoard[to.row][to.column]!)
+        let b = SKAction.follow(marblePath, asOffset: false, orientToPath: false, speed: 70)
+        let c = SKAction.perform(Selector(("moveToMiddle")), onTarget: gameBoard[to.row][to.column]!)
+
+        let moveAction = SKAction.sequence([a, b, c])
         gameBoard[to.row][to.column]!.unHighlight()
         gameBoard[to.row][to.column]!.run(moveAction)
 
