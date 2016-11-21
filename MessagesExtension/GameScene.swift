@@ -35,8 +35,12 @@ class GameScene: SKScene {
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
 
-    let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7))]
-    let greenStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
+    let redStartingIndices =    [MarbleIndex(( 0,  6)), MarbleIndex(( 1,  5)), MarbleIndex(( 1,  6)), MarbleIndex(( 2,  5)), MarbleIndex(( 2,  6)), MarbleIndex(( 2,  7)), MarbleIndex(( 3,  4)), MarbleIndex(( 3,  5)), MarbleIndex(( 3,  6)), MarbleIndex(( 3,   7))]
+    let greenStartingIndices =  [MarbleIndex((16,  6)), MarbleIndex((15,  5)), MarbleIndex((15,  6)), MarbleIndex((14,  5)), MarbleIndex((14,  6)), MarbleIndex((14,  7)), MarbleIndex((13,  4)), MarbleIndex((13,  5)), MarbleIndex((13,  6)), MarbleIndex((13,   7))]
+    let orangeStartingIndices = [MarbleIndex(( 4,  0)), MarbleIndex((4,   1)), MarbleIndex((4,   2)), MarbleIndex((4,   3)), MarbleIndex((5,   0)), MarbleIndex((5,   1)), MarbleIndex((5,   2)), MarbleIndex((6,   1)), MarbleIndex((6,   2)), MarbleIndex((7,    1))]
+    let purpleStartingIndices = [MarbleIndex(( 4,  9)), MarbleIndex((4,  10)), MarbleIndex((4,  11)), MarbleIndex((4,  12)), MarbleIndex((5,   9)), MarbleIndex((5,  10)), MarbleIndex((5,  11)), MarbleIndex((6,  10)), MarbleIndex((6,  11)), MarbleIndex((7,  10))]
+    let yellowStartingIndices = [MarbleIndex(( 9,  1)), MarbleIndex((10,  1)), MarbleIndex((10,  2)), MarbleIndex((11,  0)), MarbleIndex((11,  1)), MarbleIndex((11,  2)), MarbleIndex((12,  0)), MarbleIndex((12,  1)), MarbleIndex((12,  2)), MarbleIndex((12 ,  3))]
+    let blueStartingIndices =   [MarbleIndex(( 9, 10)), MarbleIndex((10, 10)), MarbleIndex((10, 11)), MarbleIndex((11,  9)), MarbleIndex((11, 10)), MarbleIndex((11, 11)), MarbleIndex((12,  9)), MarbleIndex((12, 10)), MarbleIndex((12, 11)), MarbleIndex((12, 12))]
 
     var gameBoard = [[MarbleNode?]]()
 
