@@ -45,7 +45,6 @@ class GameScene: SKScene {
             guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
                 return
             }
-            // todo: Validate that you own this marble
             if selectedMarble != nil {
                 if selectedMarble!.marbleColor != gameState.playerColor {
                     selectedMarble = oldValue
@@ -270,7 +269,7 @@ class GameScene: SKScene {
         let indices: [MarbleIndex]
 
         if path != nil {
-            marblePath = pathFrom(indices: path!) as! CGMutablePath
+            marblePath = pathFrom(indices: path!)
             indices = path!
         } else if from.isAdjacent(to: to) {
             let mutablePath = CGMutablePath()
@@ -291,7 +290,7 @@ class GameScene: SKScene {
         return indices
     }
 
-    func pathFrom(indices: [MarbleIndex]) -> CGPath {
+    func pathFrom(indices: [MarbleIndex]) -> CGMutablePath {
         let path = CGMutablePath()
         path.move(to: indices[0].coordinates)
         for index in indices.dropFirst() {
