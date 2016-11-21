@@ -73,19 +73,32 @@ class GameScene: SKScene {
 //        drawCoordinateOverlay()
 
         if identifier != nil {
-            if let data = UserDefaults.standard.object(forKey: identifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString) as? Data {
-                if let gameBoard = NSKeyedUnarchiver.unarchiveObject(with: data) as? [[MarbleNode?]] {
-                    self.gameBoard = gameBoard
-                    redrawGameBoard()
-                    return
-                }
-            }
+            self.gameBoard = readGameBoard(identifier: identifier!)
+            draw(gameBoard: self.gameBoard)
+            return
         }
 
         resetGame()
     }
 
-    func resetGame() {
+    func readGameBoard(identifier: String) -> [[MarbleNode?]]! {
+        guard let data = UserDefaults.standard.object(forKey: identifier + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString) as? Data else {
+
+            print("Couldn't find game board")
+            print("Creating new one")
+            return resetGame()
+        }
+
+        guard let gameBoard = NSKeyedUnarchiver.unarchiveObject(with: data) as? [[MarbleNode?]] else {
+            print("Couldn't parse game board")
+            return nil
+        }
+
+        return gameBoard
+    }
+
+    @discardableResult
+    func resetGame() -> [[MarbleNode?]] {
         // todo: clear out old game
 
         gameBoard = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
@@ -97,12 +110,16 @@ class GameScene: SKScene {
         for index in greenStartingIndices {
             drawMarbleAt(index: index, color: .green)
         }
+
+        return gameBoard
     }
 
-    func redrawGameBoard() {
-        for i in 0..<gameBoard.count {
-            for j in 0..<gameBoard[i].count {
-                if let marble = gameBoard[i][j] {
+    func draw(gameBoard: [[MarbleNode?]]?) {
+        let board = gameBoard ?? readGameBoard(identifier: MessagesViewController.sharedMessagesViewController.currentGameIdentifier!)!
+        self.childNode(withName: "marbles")!.removeAllChildren()
+        for i in 0..<board.count {
+            for j in 0..<board[i].count {
+                if let marble = board[i][j] {
                     drawMarbleAt(index: MarbleIndex((i, j)), color: marble.marbleColor)
                 }
             }
@@ -114,7 +131,7 @@ class GameScene: SKScene {
         marbleSprite.size = CGSize(width: radius, height: radius)
         marbleSprite.position = point
         marbleSprite.isUserInteractionEnabled = true
-        self.addChild(marbleSprite)
+        self.childNode(withName: "marbles")!.addChild(marbleSprite)
 
         return marbleSprite
     }
@@ -244,6 +261,8 @@ class GameScene: SKScene {
     }
 
     func moveTo(highlightNode: HighlightNode) {
+        draw(gameBoard: nil)
+
         let index = indexFrom(point: highlightNode.position)
         moveSelectedMarble(toIndex: index)
 
