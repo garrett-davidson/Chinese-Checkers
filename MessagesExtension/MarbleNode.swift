@@ -63,19 +63,15 @@ class MarbleJump {
         }
     }
 
-    func pathToIndex(index: MarbleIndex) -> (CGMutablePath, [MarbleIndex])? {
+    func reversedPathToIndex(index: MarbleIndex) -> [MarbleIndex]? {
         for jump in jumps {
             if let jump = jump {
                 if jump.index == index {
-                    let path = CGMutablePath()
-                    path.move(to: index.coordinates)
-                    path.addLine(to: self.index.coordinates)
-                    return (path, [index, self.index])
+                    return [index, self.index]
                 } else {
-                    if var (path, indices) = jump.pathToIndex(index: index) {
-                        path.addLine(to: self.index.coordinates)
+                    if var indices = jump.reversedPathToIndex(index: index) {
                         indices.append(self.index)
-                        return (path, indices)
+                        return indices
                     }
                 }
             }

@@ -274,16 +274,16 @@ class GameScene: SKScene {
         } else if from.isAdjacent(to: to) {
             let mutablePath = CGMutablePath()
 
-            // This path is intentionally backwards because we reverse it later
-            mutablePath.move(to: to.coordinates)
-            mutablePath.addLine(to: from.coordinates)
+            mutablePath.move(to: from.coordinates)
+            mutablePath.addLine(to: to.coordinates)
             marblePath = mutablePath
             indices = [from, to]
         } else {
-            (marblePath, indices) = knownJumps.pathToIndex(index: to)!
+            indices = knownJumps.reversedPathToIndex(index: to)!.reversed()
+            marblePath = pathFrom(indices: indices)
         }
 
-        let moveAction = SKAction.follow(marblePath, speed: 70).reversed()
+        let moveAction = SKAction.follow(marblePath, asOffset: false, orientToPath: false, speed: 70)
         gameBoard[to.row][to.column]!.unHighlight()
         gameBoard[to.row][to.column]!.run(moveAction)
 
