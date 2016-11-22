@@ -41,4 +41,50 @@ class MarbleNode: SKSpriteNode {
     func unHighlight() {
         self.alpha = 1
     }
+
+    func moveToTop() {
+        self.zPosition = 100
+    }
+
+    func moveToMiddle() {
+        self.zPosition = 0
+    }
+}
+
+class MarbleJump {
+    var leftJump: MarbleJump?
+    var rightJump: MarbleJump?
+    var upLeftJump: MarbleJump?
+    var upRightJump: MarbleJump?
+    var downLeftJump: MarbleJump?
+    var downRightJump: MarbleJump?
+
+    let index: MarbleIndex
+
+    init(index: MarbleIndex) {
+        self.index = index
+    }
+
+    var jumps: [MarbleJump?] {
+        get {
+            return [leftJump, rightJump, upLeftJump, upRightJump, downLeftJump, downRightJump]
+        }
+    }
+
+    func reversedPathToIndex(index: MarbleIndex) -> [MarbleIndex]? {
+        for jump in jumps {
+            if let jump = jump {
+                if jump.index == index {
+                    return [index, self.index]
+                } else {
+                    if var indices = jump.reversedPathToIndex(index: index) {
+                        indices.append(self.index)
+                        return indices
+                    }
+                }
+            }
+        }
+
+        return nil
+    }
 }

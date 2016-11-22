@@ -40,13 +40,13 @@ class MessagesViewController: MSMessagesAppViewController {
     struct GameState: CustomStringConvertible {
         var command: GameCommand!
         var playerColor: MarbleColor!
-        var move: (MarbleIndex, MarbleIndex)?
+        var move: (MarbleIndex, MarbleIndex, [MarbleIndex])?
         var players: [String: String]!
         var description: String {
             get {
                 var ret = "\(GameStateParameter.command)=\(command!);\(GameStateParameter.playerColor)=\(playerColor!);\(GameStateParameter.players)=\(players.toBase64String()!)"
                 if move != nil {
-                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1)"
+                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1):\(move!.2)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
                 }
                 return ret
             }
@@ -57,7 +57,7 @@ class MessagesViewController: MSMessagesAppViewController {
             self.move = nil
             self.players = nil
         }
-        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex)? = nil) {
+        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex, [MarbleIndex])? = nil) {
             self.command = command
             self.playerColor = playerColor
             self.players = players
@@ -96,7 +96,13 @@ class MessagesViewController: MSMessagesAppViewController {
                     let movePositions = values[1].components(separatedBy: ":")
                     let from = MarbleIndex(string: movePositions[0])
                     let to = MarbleIndex(string: movePositions[1])
-                    self.move = (from, to)
+
+                    let indexStrings = String(movePositions[2].removingPercentEncoding!.characters.dropFirst().dropLast()).components(separatedBy: ", ")
+                    var indices = [MarbleIndex]()
+                    for indexString in indexStrings {
+                        indices.append(MarbleIndex(string: indexString))
+                    }
+                    self.move = (from, to, indices)
                 }
             }
         }
@@ -195,9 +201,23 @@ class MessagesViewController: MSMessagesAppViewController {
 
         let url = URL(string: "\(currentGameIdentifier!)?\(nextGameState!)")!
         newGameMessage.url = url
+
+        let layout = MSMessageTemplateLayout()
+        layout.image = getScreenshot()
+
+        newGameMessage.layout = layout
+
         currentConversation.insert(newGameMessage, completionHandler: nil)
         GameScene.sharedGame?.saveGameBoard()
-        dismiss()
+//        dismiss()
+    }
+
+    func getScreenshot() -> UIImage {
+        let size = CGSize(width: 300, height: 450)
+        UIGraphicsBeginImageContextWithOptions(size, true, 0.0)
+        let rect = CGRect(origin: CGPoint(x: 0, y: -100), size: gameView.bounds.size)
+        gameView.drawHierarchy(in: rect, afterScreenUpdates: true)
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 
     @IBAction func startGame(_ sender: Any) {
@@ -254,7 +274,7 @@ class MessagesViewController: MSMessagesAppViewController {
             let move = previousGameState.move!
             nextGameState?.players = previousGameState.players
             nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
-            GameScene.sharedGame.moveMarble(from: move.0, to: move.1)
+            GameScene.sharedGame.moveMarble(from: move.0, to: move.1, path: move.2)
         }
 
         switch previousGameState.command! {
@@ -283,10 +303,10 @@ class MessagesViewController: MSMessagesAppViewController {
         }
     }
 
-    func sendMove(from: MarbleIndex, to: MarbleIndex) {
+    func sendMove(from: MarbleIndex, to: MarbleIndex, path: [MarbleIndex]) {
         nextGameState!.command = .move
         nextGameState?.playerColor = MarbleColor(rawValue: nextGameState!.players![currentConversation.localParticipantIdentifier.uuidString]!)
-        nextGameState?.move = (from, to)
+        nextGameState?.move = (from, to, path)
 
         let score = gameScene.scoreFor(color: nextGameState!.playerColor)
         print(score)
