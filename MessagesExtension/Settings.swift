@@ -8,6 +8,48 @@
 
 import Foundation
 
+class StringManager {
+    static func newGameText(forUsers users: [String]) -> (String, String?) {
+        if Settings.isBitchMode(forUsers: users) {
+            return [("Let's play bitch.", nil),
+                    ("Do you wanna play a game, bitch?", nil),
+                    ].random
+        } else {
+            return [("Let's play!", nil),
+                    ("Play Chinese Checkers with me!", nil),
+                    ].random
+        }
+    }
+
+    static func yourTurnText(forUsers users: [String]) -> (String, String?) {
+        if Settings.isBitchMode(forUsers: users) {
+            return [("Hurry the fuck up.", nil),
+                    ("Go bitch.", nil),
+                    ("You're going down bitch.", nil),
+                    ("Y u take soooo long?", nil),
+                    ("🖕", nil),
+                    ].random
+        } else {
+            return [("Your turn.", nil),
+                    ].random
+        }
+    }
+
+    static func gameOverText(forUsers users: [String]) -> (String, String?) {
+        if Settings.isBitchMode(forUsers: users) {
+            return [("gg", "(not really)"),
+                    ("Damn that was easy", nil),
+                    ("Damn that was easy", "Like your mom"),
+                    ("Wow u suck", nil),
+                    ("😘", nil),
+                    ].random
+        } else {
+            return [("I win!", nil)
+                    ].random
+        }
+    }
+}
+
 class Settings {
     private static let bitchModeKey = "bitchMode"
 
@@ -36,6 +78,15 @@ class Settings {
             }
         } else {
             UserDefaults.standard.set(bitchMode, forKey: bitchModeKey)
+        }
+    }
+}
+
+extension Array {
+    var random: Element {
+        get {
+            let i = Int(arc4random_uniform(UInt32(self.count)))
+            return self[i]
         }
     }
 }

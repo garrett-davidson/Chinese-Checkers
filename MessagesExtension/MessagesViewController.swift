@@ -254,23 +254,22 @@ class MessagesViewController: MSMessagesAppViewController {
         layout.image = getScreenshot()
 
         let messageText: String
+        let subCaption: String?
         switch nextGameState!.command! {
         case .newGame:
-            messageText = "Play Chinese Checkers with me!"
+            (messageText, subCaption) = StringManager.newGameText(forUsers: Array(nextGameState!.players.keys))
         case .move:
-            messageText = "Your turn..."
+            (messageText, subCaption) = StringManager.yourTurnText(forUsers: Array(nextGameState!.players.keys))
 
         case .gameOver:
-            messageText = "I win!"
+            (messageText, subCaption) = StringManager.gameOverText(forUsers: Array(nextGameState!.players.keys))
         }
         newGameMessage.summaryText = messageText
         layout.caption = messageText
-        if Settings.isBitchMode(forUsers: Array(nextGameState!.players.keys)) {
-            layout.trailingSubcaption = "Bitch."
-        }
+        layout.trailingSubcaption = subCaption
 
         newGameMessage.layout = layout
-        currentConversation.insert(newGameMessage, completionHandler: nil)
+        currentConversation.insert(newGameMessage)
 //        dismiss()
     }
 
