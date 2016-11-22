@@ -82,6 +82,7 @@ class GameScene: SKScene {
             self.gameBoard = readGameBoard(identifier: identifier!)
             draw(gameBoard: self.gameBoard)
             addScoreLabels()
+            checkTurn()
             return
         }
 
@@ -422,12 +423,13 @@ class GameScene: SKScene {
         return score
     }
     func waitingTurn() {
+        self.alpha = 0.5
+        view?.tintColor = .black
         waitLabel = SKLabelNode(fontNamed: "Arial")
         waitLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         waitLabel.text = "Waiting on Opponent!"
         waitLabel.fontSize = 16
         self.addChild(waitLabel)
-
     }
     func checkTurn() {
         guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
@@ -435,11 +437,18 @@ class GameScene: SKScene {
             return
         }
         guard let playerColor = MessagesViewController.sharedMessagesViewController.currentConversation else {
+            waitingTurn()
+            return
+        }
+        if gameState.playerColor == nil {
+            waitingTurn()
+            self.isUserInteractionEnabled = false
             return
         }
         if gameState.playerColor != MarbleColor(rawValue: gameState.players[playerColor.localParticipantIdentifier.uuidString]!) {
             waitingTurn()
             self.isUserInteractionEnabled = false
+
         }
     }
 }
