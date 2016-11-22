@@ -12,10 +12,9 @@ import SpriteKit
 
 class MessagesViewController: MSMessagesAppViewController {
 
+
     @IBOutlet weak var startGameView: UIView!
     @IBOutlet weak var winLabel: UILabel!
-    @IBOutlet weak var woodBackground: UIImageView!
-    @IBOutlet weak var checkersLogo: UIImageView!
     var gameScene: GameScene!
     var currentConversation: MSConversation!
     var currentGameIdentifier: String?
@@ -43,7 +42,6 @@ class MessagesViewController: MSMessagesAppViewController {
         var playerColor: MarbleColor!
         var move: (MarbleIndex, MarbleIndex, [MarbleIndex])?
         var players: [String: String]!
-
         var description: String {
             get {
                 var ret = "\(GameStateParameter.command)=\(command!);\(GameStateParameter.playerColor)=\(playerColor!);\(GameStateParameter.players)=\(players.toBase64String()!)"
@@ -53,7 +51,6 @@ class MessagesViewController: MSMessagesAppViewController {
                 return ret
             }
         }
-
         init() {
             self.command = nil
             self.playerColor = nil
@@ -232,6 +229,7 @@ class MessagesViewController: MSMessagesAppViewController {
         sendReply(session: newGameSession)
     }
 
+
     func showGameScene(identifier: String? = nil) {
         if gameScene == nil {
             loadGameScene(identifier: identifier)
@@ -239,6 +237,7 @@ class MessagesViewController: MSMessagesAppViewController {
         startGameView.isHidden = true
         gameView.isHidden = false
         gameView.presentScene(gameScene)
+        
     }
 
     func loadGameScene(identifier: String? = nil) {
@@ -312,6 +311,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
         let score = gameScene.scoreFor(color: nextGameState!.playerColor)
         print(score)
+        gameScene.assignScores(color: nextGameState!.playerColor, score: score)
         if score == -1 {
             print("I win")
             nextGameState!.command = .gameOver
@@ -321,6 +321,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
         sendReply(session: currentConversation.selectedMessage!.session!)
     }
+
 }
 
 extension Dictionary {

@@ -17,7 +17,7 @@
 		68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AF21AF1DD63625006FC576 /* MessagesViewController.swift */; };
 		68AF21B31DD63625006FC576 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B11DD63625006FC576 /* MainInterface.storyboard */; };
 		68AF21B51DD63625006FC576 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B41DD63625006FC576 /* Assets.xcassets */; };
-		68AF21C11DD646D6006FC576 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21C01DD646D6006FC576 /* GameScene.sks */; };
+		72DA4BDA1DE3DF34001E87EC /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 72DA4BD91DE3DF34001E87EC /* GameScene.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +57,7 @@
 		68AF21B21DD63625006FC576 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		68AF21B41DD63625006FC576 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		68AF21B61DD63625006FC576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		68AF21C01DD646D6006FC576 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		72DA4BD91DE3DF34001E87EC /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				68AF21B41DD63625006FC576 /* Assets.xcassets */,
-				68AF21C01DD646D6006FC576 /* GameScene.sks */,
+				72DA4BD91DE3DF34001E87EC /* GameScene.sks */,
 				689812A41DD64C2C008212E8 /* GameScene.swift */,
 				689812AA1DD6A78C008212E8 /* HighlightNode.swift */,
 				68AF21B61DD63625006FC576 /* Info.plist */,
@@ -216,7 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68AF21B51DD63625006FC576 /* Assets.xcassets in Resources */,
-				68AF21C11DD646D6006FC576 /* GameScene.sks in Resources */,
+				72DA4BDA1DE3DF34001E87EC /* GameScene.sks in Resources */,
 				689812A71DD6511C008212E8 /* Assets.xcassets in Resources */,
 				68AF21B31DD63625006FC576 /* MainInterface.storyboard in Resources */,
 			);
