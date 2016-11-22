@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		686A98291DE503D8000A554B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686A98281DE503D8000A554B /* Settings.swift */; };
 		689812A51DD64C2C008212E8 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689812A41DD64C2C008212E8 /* GameScene.swift */; };
 		689812A71DD6511C008212E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21A01DD63624006FC576 /* Assets.xcassets */; };
 		689812A91DD69AEF008212E8 /* MarbleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689812A81DD69AEF008212E8 /* MarbleNode.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		686A98281DE503D8000A554B /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		689812A41DD64C2C008212E8 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		689812A81DD69AEF008212E8 /* MarbleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarbleNode.swift; sourceTree = "<group>"; };
 		689812AA1DD6A78C008212E8 /* HighlightNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightNode.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				68AF21B11DD63625006FC576 /* MainInterface.storyboard */,
 				689812A81DD69AEF008212E8 /* MarbleNode.swift */,
 				68AF21AF1DD63625006FC576 /* MessagesViewController.swift */,
+				686A98281DE503D8000A554B /* Settings.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				689812A51DD64C2C008212E8 /* GameScene.swift in Sources */,
 				689812A91DD69AEF008212E8 /* MarbleNode.swift in Sources */,
 				68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */,
+				686A98291DE503D8000A554B /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

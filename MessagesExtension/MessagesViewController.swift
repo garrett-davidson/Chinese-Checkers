@@ -265,7 +265,9 @@ class MessagesViewController: MSMessagesAppViewController {
         }
         newGameMessage.summaryText = messageText
         layout.caption = messageText
-        layout.trailingSubcaption = "Bitch."
+        if Settings.isBitchMode(forUsers: Array(nextGameState!.players.keys)) {
+            layout.trailingSubcaption = "Bitch."
+        }
 
         newGameMessage.layout = layout
         currentConversation.insert(newGameMessage, completionHandler: nil)
