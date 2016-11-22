@@ -252,8 +252,20 @@ class MessagesViewController: MSMessagesAppViewController {
         let layout = MSMessageTemplateLayout()
         layout.image = getScreenshot()
 
-        newGameMessage.layout = layout
+        let messageText: String
+        switch nextGameState!.command! {
+        case .newGame:
+            messageText = "Play Chinese Checkers with me!"
+        case .move:
+            messageText = "Your turn"
 
+        case .gameOver:
+            messageText = "I win"
+        }
+        newGameMessage.summaryText = messageText
+        layout.caption = messageText
+
+        newGameMessage.layout = layout
         currentConversation.insert(newGameMessage, completionHandler: nil)
 //        dismiss()
     }
