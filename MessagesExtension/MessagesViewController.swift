@@ -291,6 +291,7 @@ class MessagesViewController: MSMessagesAppViewController {
                     break
                 }
             }
+            GameScene.sharedGame.resetGame()
 
         case .move:
             print("Move")
