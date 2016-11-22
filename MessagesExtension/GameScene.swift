@@ -21,8 +21,10 @@ enum MarbleColor: String {
 }
 
 class GameScene: SKScene {
-
+    var redLabel: SKLabelNode!
+    var greenLabel: SKLabelNode!
     static var sharedGame: GameScene!
+    var waitLabel: SKLabelNode!
 
     let dx = CGFloat(11.5)
     let dy = CGFloat(-20)
@@ -59,24 +61,28 @@ class GameScene: SKScene {
         }
     }
 
+
     override init() {
         super.init()
         GameScene.sharedGame = self
+
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-
         GameScene.sharedGame = self
+
     }
 
     func setup(identifier: String? = nil) {
 //        drawCoordinateOverlay()
 
+        addScoreLabels()
         if identifier != nil {
             if let data = UserDefaults.standard.object(forKey: identifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString) as? Data {
                 if let gameBoard = NSKeyedUnarchiver.unarchiveObject(with: data) as? [[MarbleNode?]] {
                     self.gameBoard = gameBoard
+
                     redrawGameBoard()
                     return
                 }
@@ -85,7 +91,19 @@ class GameScene: SKScene {
 
         resetGame()
     }
+    func addScoreLabels() {
 
+        redLabel = SKLabelNode(fontNamed: "Arial")
+        redLabel.text = "RED: 0/10"
+        redLabel.fontSize = 20
+        redLabel.position = CGPoint(x: -self.frame.width/2 + redLabel.frame.width/2, y: self.frame.height/2 - 70)
+        self.addChild(redLabel)
+        greenLabel = SKLabelNode(fontNamed: "Arial")
+        greenLabel.text = "GREEN: 0/10"
+        greenLabel.fontSize = 20
+        greenLabel.position = CGPoint(x: self.frame.width/2 - greenLabel.frame.width/2, y: self.frame.height/2 - 70)
+        self.addChild(greenLabel)
+    }
     func resetGame() {
         // todo: clear out old game
 
@@ -268,7 +286,20 @@ class GameScene: SKScene {
             }
         }
     }
+    func assignScores(color: MarbleColor, score: Int) {
 
+        let homeColor = MarbleColor.allColors.opposite(element: color)
+
+        switch homeColor {
+        case .green:
+            greenLabel.text = "GREEN: \(score)/10"
+        case .red:
+            redLabel.text = "RED: \(score)/10"
+        default:
+            print("Todo")
+        }
+
+    }
     func scoreFor(color: MarbleColor) -> Int {
         var score = 0
 
@@ -301,6 +332,27 @@ class GameScene: SKScene {
         print("Score for \(color) is \(score)")
 
         return score
+    }
+    func waitingTurn() {
+        waitLabel = SKLabelNode(fontNamed: "Arial")
+        waitLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        waitLabel.text = "Waiting on Opponent!"
+        waitLabel.fontSize = 16
+        self.addChild(waitLabel)
+
+    }
+    func checkTurn() {
+        guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
+            waitingTurn()
+            return
+        }
+        guard let playerColor = MessagesViewController.sharedMessagesViewController.currentConversation else {
+            return
+        }
+        if gameState.playerColor != MarbleColor(rawValue: gameState.players[playerColor.localParticipantIdentifier.uuidString]!) {
+            waitingTurn()
+            self.isUserInteractionEnabled = false
+        }
     }
 }
 
