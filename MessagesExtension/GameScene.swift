@@ -29,7 +29,9 @@ let boardHeight = 17
 
 class GameScene: SKScene {
     var redLabel: SKLabelNode!
+    var redImage: SKSpriteNode!
     var greenLabel: SKLabelNode!
+    var greenImage: SKSpriteNode!
     static var sharedGame: GameScene!
     var waitLabel: SKLabelNode!
 
@@ -76,27 +78,37 @@ class GameScene: SKScene {
     func setup(identifier: String? = nil) {
 //        drawCoordinateOverlay()
 
-        addScoreLabels()
         if identifier != nil {
             self.gameBoard = readGameBoard(identifier: identifier!)
             draw(gameBoard: self.gameBoard)
+            addScoreLabels()
+            checkTurn()
             return
         }
 
         resetGame()
     }
     func addScoreLabels() {
-
+        redImage = SKSpriteNode(imageNamed: "red")
+        redImage.size = CGSize(width: 35, height: 35)
+        redImage.position = CGPoint(x: -self.frame.width/2 + redImage.frame.width/2, y: self.frame.height/2 - 70)
+        self.addChild(redImage)
         redLabel = SKLabelNode(fontNamed: "Arial")
-        redLabel.text = "RED: 0/10"
         redLabel.fontSize = 20
-        redLabel.position = CGPoint(x: -self.frame.width/2 + redLabel.frame.width/2, y: self.frame.height/2 - 70)
+        redLabel.fontColor = .black
+        assignScores(color: .red)
+        redLabel.position = CGPoint(x: -self.frame.width/2 + 35 + redLabel.frame.width/2, y: self.frame.height/2 - 70 - redImage.frame.height/4)
         self.addChild(redLabel)
         greenLabel = SKLabelNode(fontNamed: "Arial")
-        greenLabel.text = "GREEN: 0/10"
         greenLabel.fontSize = 20
-        greenLabel.position = CGPoint(x: self.frame.width/2 - greenLabel.frame.width/2, y: self.frame.height/2 - 70)
+        greenLabel.fontColor = .black
+        assignScores(color: .green)
         self.addChild(greenLabel)
+        greenImage = SKSpriteNode(imageNamed: "green")
+        greenImage.size = CGSize(width: 35, height: 35)
+        greenImage.position = CGPoint(x: self.frame.width/2 - greenImage.frame.width/2 - greenLabel.frame.width, y: self.frame.height/2 - 70)
+        self.addChild(greenImage)
+        greenLabel.position = CGPoint(x: self.frame.width/2 - greenLabel.frame.width/2, y: self.frame.height/2 - 70 - greenImage.frame.height/4)
     }
 
     func readGameBoard(identifier: String) -> [[MarbleNode?]]! {
@@ -365,23 +377,21 @@ class GameScene: SKScene {
             }
         }
     }
-    func assignScores(color: MarbleColor, score: Int) {
+    func assignScores(color: MarbleColor) {
 
-        let homeColor = MarbleColor.allColors.opposite(element: color)
-
-        switch homeColor {
+        switch color {
         case .green:
-            greenLabel.text = "GREEN: \(score)/10"
+            greenLabel.text = "\(scoreFor(color: color))/10"
         case .red:
-            redLabel.text = "RED: \(score)/10"
+            redLabel.text = "\(scoreFor(color: color))/10"
         default:
             print("Todo")
         }
 
     }
+
     func scoreFor(color: MarbleColor) -> Int {
         var score = 0
-
         let homeIndices: [MarbleIndex]
         let homeColor = MarbleColor.allColors.opposite(element: color)
 
@@ -413,12 +423,13 @@ class GameScene: SKScene {
         return score
     }
     func waitingTurn() {
+        self.alpha = 0.5
+        view?.tintColor = .black
         waitLabel = SKLabelNode(fontNamed: "Arial")
         waitLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         waitLabel.text = "Waiting on Opponent!"
         waitLabel.fontSize = 16
         self.addChild(waitLabel)
-
     }
     func checkTurn() {
         guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
@@ -426,11 +437,18 @@ class GameScene: SKScene {
             return
         }
         guard let playerColor = MessagesViewController.sharedMessagesViewController.currentConversation else {
+            waitingTurn()
+            return
+        }
+        if gameState.playerColor == nil {
+            waitingTurn()
+            self.isUserInteractionEnabled = false
             return
         }
         if gameState.playerColor != MarbleColor(rawValue: gameState.players[playerColor.localParticipantIdentifier.uuidString]!) {
             waitingTurn()
             self.isUserInteractionEnabled = false
+
         }
     }
 }
