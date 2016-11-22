@@ -315,16 +315,19 @@ class MessagesViewController: MSMessagesAppViewController {
             guard previousGameState.playerColor != MarbleColor(rawValue: previousMessageColorString) else {
                 // This means we clicked on our own message
                 // So we shouldn't replay the last move
+                nextGameState?.gameBoard = previousGameState.gameBoard
+                showGameScene(identifier: currentGameIdentifier)
                 return
             }
         }
 
         func playMove() {
             nextGameState?.gameBoard = previousGameState.gameBoard
-            showGameScene(identifier: currentGameIdentifier)
-            let move = previousGameState.move!
             nextGameState?.players = previousGameState.players
             nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
+            showGameScene(identifier: currentGameIdentifier)
+
+            let move = previousGameState.move!
             GameScene.sharedGame.moveMarble(from: move.0, to: move.1, path: move.2, updateBoard: true)
         }
 
