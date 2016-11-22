@@ -313,7 +313,8 @@ class GameScene: SKScene {
             marblePath = mutablePath
             indices = [from, to]
         } else {
-            indices = knownJumps.reversedPathToIndex(index: to)!.reversed()
+//            indices = knownJumps.reversedPathToIndex(index: to)!.reversed()
+            indices = MarbleJump.shortestPath(from: knownJumps, to: to)!
             marblePath = pathFrom(indices: indices)
         }
 

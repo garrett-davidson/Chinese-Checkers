@@ -59,6 +59,9 @@ class MarbleJump {
     var downLeftJump: MarbleJump?
     var downRightJump: MarbleJump?
 
+    var previousJump: MarbleJump?
+    static var queue = [MarbleJump]()
+
     let index: MarbleIndex
 
     init(index: MarbleIndex) {
@@ -84,6 +87,42 @@ class MarbleJump {
                 }
             }
         }
+
+        return nil
+    }
+
+    static func shortestPath(from: MarbleJump, to: MarbleIndex) -> [MarbleIndex]? {
+
+        guard from.index != to else {
+            return [to]
+        }
+
+        queue = [from]
+
+        while let current = queue.first {
+            queue = Array(queue.dropFirst())
+
+            for jump in current.jumps {
+                guard let jump = jump, jump.previousJump == nil else {
+                    continue
+                }
+
+                if jump.index == to {
+                    var jumpPath = [jump.index, current.index]
+                    var previous = current
+                    while let parent = previous.previousJump {
+                        jumpPath.append(parent.index)
+                        previous = parent
+                    }
+
+                    return jumpPath.reversed()
+                }
+
+                jump.previousJump = current
+                queue.append(jump)
+            }
+        }
+
 
         return nil
     }
