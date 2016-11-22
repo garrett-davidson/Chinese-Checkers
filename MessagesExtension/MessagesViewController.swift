@@ -12,7 +12,6 @@ import SpriteKit
 
 class MessagesViewController: MSMessagesAppViewController {
 
-
     @IBOutlet weak var startGameView: UIView!
     @IBOutlet weak var winLabel: UILabel!
     var gameScene: GameScene!
@@ -275,7 +274,6 @@ class MessagesViewController: MSMessagesAppViewController {
 
         sendReply(session: newGameSession)
     }
-
 
     func showGameScene(identifier: String? = nil) {
         if gameScene == nil {

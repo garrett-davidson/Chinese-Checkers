@@ -60,7 +60,6 @@ class GameScene: SKScene {
         }
     }
 
-
     override init() {
         super.init()
         GameScene.sharedGame = self
@@ -212,49 +211,58 @@ class GameScene: SKScene {
 
     var knownJumps = MarbleJump(index: MarbleIndex((-1, -1)))
     var jumpableIndices = [MarbleIndex]()
+
     func highlightJumpsForMarbleAt(index: MarbleIndex) -> MarbleJump {
-        jumpableIndices.append(index)
+        let startJump = MarbleJump(index: index)
+        jumpableIndices = []
 
-        let directions = MarbleIndex.directions
+        var queue = [startJump]
 
-        let jump = MarbleJump(index: index)
-        for i in 0..<directions.count {
-            let direction = directions[i]
-            let indexOfDirection = direction(index)()
-            if marbleExistsAt(index: indexOfDirection) {
-                let directionalJumpIndex = direction(indexOfDirection)()
-                if !jumpableIndices.contains(directionalJumpIndex) {
-                    if let highlightNode = highlightIfEmptyAt(index: directionalJumpIndex) {
-                        highlightNodes.append(highlightNode)
-                        let newJump = highlightJumpsForMarbleAt(index: directionalJumpIndex)
-                        switch i {
-                        case 0:
-                            jump.leftJump = newJump
+        while let currentJump = queue.first {
+            queue = Array(queue.dropFirst())
 
-                        case 1:
-                            jump.rightJump = newJump
+            for i in 0..<MarbleIndex.directions.count {
+                let direction = MarbleIndex.directions[i]
+                let adjacentIndex = direction(currentJump.index)()
+                if marbleExistsAt(index: adjacentIndex) {
+                    let jumpIndex = direction(adjacentIndex)()
+                    if !jumpableIndices.contains(jumpIndex) {
+                        if let highlightNode = highlightIfEmptyAt(index: jumpIndex) {
+                            highlightNodes.append(highlightNode)
 
-                        case 2:
-                            jump.upLeftJump = newJump
+                            let newJump = MarbleJump(index: jumpIndex)
+                            jumpableIndices.append(jumpIndex)
+                            switch i {
+                            case 0:
+                                currentJump.leftJump = newJump
 
-                        case 3:
-                            jump.upRightJump = newJump
+                            case 1:
+                                currentJump.rightJump = newJump
 
-                        case 4:
-                            jump.downLeftJump = newJump
+                            case 2:
+                                currentJump.upLeftJump = newJump
 
-                        case 5:
-                            jump.downRightJump = newJump
-                        default:
-                            print("You fucked up")
-                            fatalError("How many directions do you think there are??")
+                            case 3:
+                                currentJump.upRightJump = newJump
+
+                            case 4:
+                                currentJump.downLeftJump = newJump
+
+                            case 5:
+                                currentJump.downRightJump = newJump
+                            default:
+                                print("You fucked up")
+                                fatalError("How many directions do you think there are??")
+                            }
+
+                            queue.append(newJump)
                         }
                     }
                 }
             }
         }
 
-        return jump
+        return startJump
     }
 
     func highlightIfEmptyAt(index: MarbleIndex) -> HighlightNode? {
@@ -313,8 +321,7 @@ class GameScene: SKScene {
             marblePath = mutablePath
             indices = [from, to]
         } else {
-//            indices = knownJumps.reversedPathToIndex(index: to)!.reversed()
-            indices = MarbleJump.shortestPath(from: knownJumps, to: to)!
+            indices = knownJumps.reversedPathToIndex(index: to)!.reversed()
             marblePath = pathFrom(indices: indices)
         }
 
