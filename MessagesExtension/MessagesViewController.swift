@@ -257,13 +257,14 @@ class MessagesViewController: MSMessagesAppViewController {
         case .newGame:
             messageText = "Play Chinese Checkers with me!"
         case .move:
-            messageText = "Your turn"
+            messageText = "Your turn..."
 
         case .gameOver:
-            messageText = "I win"
+            messageText = "I win!"
         }
         newGameMessage.summaryText = messageText
         layout.caption = messageText
+        layout.trailingSubcaption = "Bitch."
 
         newGameMessage.layout = layout
         currentConversation.insert(newGameMessage, completionHandler: nil)
@@ -384,8 +385,6 @@ class MessagesViewController: MSMessagesAppViewController {
             let totalWins = UserDefaults.standard.integer(forKey: "totalWins")
             UserDefaults.standard.set(totalWins + 1, forKey: "totalWins")
         }
-
-        sendReply(session: currentConversation.selectedMessage!.session!)
     }
 
 }
