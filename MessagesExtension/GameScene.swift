@@ -94,11 +94,13 @@ class GameScene: SKScene {
         self.addChild(redImage)
         redLabel = SKLabelNode(fontNamed: "Arial")
         redLabel.fontSize = 20
+        redLabel.fontColor = .black
         assignScores(color: .red)
         redLabel.position = CGPoint(x: -self.frame.width/2 + 35 + redLabel.frame.width/2, y: self.frame.height/2 - 70 - redImage.frame.height/4)
         self.addChild(redLabel)
         greenLabel = SKLabelNode(fontNamed: "Arial")
         greenLabel.fontSize = 20
+        greenLabel.fontColor = .black
         assignScores(color: .green)
         self.addChild(greenLabel)
         greenImage = SKSpriteNode(imageNamed: "green")
