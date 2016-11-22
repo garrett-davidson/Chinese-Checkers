@@ -77,14 +77,13 @@ class GameScene: SKScene {
         drawCoordinateOverlay()
 
         if identifier != nil {
-            self.gameBoard = readGameBoard(identifier: identifier!)
             draw(gameBoard: MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard!)
             addScoreLabels()
             checkTurn()
             return
         }
 
-        resetGame()
+        GameScene.resetGame()
     }
 
     func addScoreLabels() {
