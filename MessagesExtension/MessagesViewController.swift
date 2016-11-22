@@ -310,7 +310,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
         let score = gameScene.scoreFor(color: nextGameState!.playerColor)
         print(score)
-        gameScene.assignScores(color: nextGameState!.playerColor, score: score)
+        gameScene.assignScores(color: nextGameState!.playerColor)
         if score == -1 {
             print("I win")
             nextGameState!.command = .gameOver
