@@ -35,10 +35,8 @@ class GameScene: SKScene {
     let rowWidths = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1]
     let rowStarts = [6, 5, 5, 4,  0,  0,  1,  1, 2,  1,  1,  0,  0, 4, 5, 5, 6]
 
-    let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7))]
-    let greenStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
-
-    var gameBoard = [[MarbleNode?]]()
+    static let redStartingIndices = [MarbleIndex(( 0, 6)), MarbleIndex(( 1, 5)), MarbleIndex(( 1, 6)), MarbleIndex(( 2, 5)), MarbleIndex(( 2, 6)), MarbleIndex(( 2, 7)), MarbleIndex(( 3, 4)), MarbleIndex(( 3, 5)), MarbleIndex(( 3, 6)), MarbleIndex(( 3, 7))]
+    static let greenStartingIndices = [MarbleIndex((16, 6)), MarbleIndex((15, 5)), MarbleIndex((15, 6)), MarbleIndex((14, 5)), MarbleIndex((14, 6)), MarbleIndex((14, 7)), MarbleIndex((13, 4)), MarbleIndex((13, 5)), MarbleIndex((13, 6)), MarbleIndex((13, 7))]
 
     var selectedMarble: MarbleNode? {
         didSet {
@@ -70,56 +68,38 @@ class GameScene: SKScene {
     }
 
     func setup(identifier: String? = nil) {
-//        drawCoordinateOverlay()
+        drawCoordinateOverlay()
 
         if identifier != nil {
-            self.gameBoard = readGameBoard(identifier: identifier!)
-            draw(gameBoard: self.gameBoard)
+            draw(gameBoard: MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard!)
             return
         }
 
-        resetGame()
-    }
-
-    func readGameBoard(identifier: String) -> [[MarbleNode?]]! {
-        guard let data = UserDefaults.standard.object(forKey: identifier + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString) as? Data else {
-
-            print("Couldn't find game board")
-            print("Creating new one")
-            return resetGame()
-        }
-
-        guard let gameBoard = NSKeyedUnarchiver.unarchiveObject(with: data) as? [[MarbleNode?]] else {
-            print("Couldn't parse game board")
-            return nil
-        }
-
-        return gameBoard
+        GameScene.resetGame()
     }
 
     @discardableResult
-    func resetGame() -> [[MarbleNode?]] {
+    static func resetGame() -> [[MarbleNode?]] {
         // todo: clear out old game
 
-        gameBoard = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
+        var gameBoard = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
 
         for index in redStartingIndices {
-            drawMarbleAt(index: index, color: .red)
+            gameBoard[index.row][index.column] = MarbleNode(color: .red)
         }
 
         for index in greenStartingIndices {
-            drawMarbleAt(index: index, color: .green)
+            gameBoard[index.row][index.column] = MarbleNode(color: .green)
         }
 
         return gameBoard
     }
 
-    func draw(gameBoard: [[MarbleNode?]]?) {
-        let board = gameBoard ?? readGameBoard(identifier: MessagesViewController.sharedMessagesViewController.currentGameIdentifier!)!
+    func draw(gameBoard: [[MarbleNode?]]) {
         self.childNode(withName: "marbles")!.removeAllChildren()
-        for i in 0..<board.count {
-            for j in 0..<board[i].count {
-                if let marble = board[i][j] {
+        for i in 0..<gameBoard.count {
+            for j in 0..<gameBoard[i].count {
+                if let marble = gameBoard[i][j] {
                     drawMarbleAt(index: MarbleIndex((i, j)), color: marble.marbleColor)
                 }
             }
@@ -145,7 +125,7 @@ class GameScene: SKScene {
     }
 
     func drawMarbleAt(index: MarbleIndex, color: MarbleColor) {
-        gameBoard[index.row][index.column] = drawMarble(atPoint: index.coordinates, color: color)
+        MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[index.row][index.column] = drawMarble(atPoint: index.coordinates, color: color)
     }
 
     func isValid(index: MarbleIndex) -> Bool {
@@ -187,7 +167,7 @@ class GameScene: SKScene {
             return true
         }
 
-        return gameBoard[index.row][index.column] != nil
+        return MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[index.row][index.column] != nil
     }
 
     func highligtAdjacentSpotsForMarbleAt(index: MarbleIndex) {
@@ -261,7 +241,7 @@ class GameScene: SKScene {
     }
 
     func moveTo(highlightNode: HighlightNode) {
-        draw(gameBoard: nil)
+        draw(gameBoard: MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard!)
 
         let index = indexFrom(point: highlightNode.position)
         moveSelectedMarble(toIndex: index)
@@ -277,12 +257,16 @@ class GameScene: SKScene {
     }
 
     @discardableResult
-    func moveMarble(from: MarbleIndex, to: MarbleIndex, path: [MarbleIndex]? = nil) -> [MarbleIndex] {
+    func moveMarble(from: MarbleIndex, to: MarbleIndex, path: [MarbleIndex]? = nil, updateBoard: Bool = false) -> [MarbleIndex] {
         // This occasionally crashes and I have no idea
         // Race condition somewhere?
-        gameBoard[to.row][to.column] = gameBoard[from.row][from.column]!
+        // Maybe resolved after changing to sending entire gameBoard each message?
+        let movingMarble = MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[from.row][from.column]!
 
-        gameBoard[from.row][from.column] = nil
+        if updateBoard {
+            MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[to.row][to.column] = movingMarble
+            MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[from.row][from.column] = nil
+        }
 
         let marblePath: CGMutablePath
         let indices: [MarbleIndex]
@@ -302,13 +286,13 @@ class GameScene: SKScene {
             marblePath = pathFrom(indices: indices)
         }
 
-        let a = SKAction.perform(Selector(("moveToTop")), onTarget: gameBoard[to.row][to.column]!)
-        let b = SKAction.follow(marblePath, asOffset: false, orientToPath: false, speed: 70)
-        let c = SKAction.perform(Selector(("moveToMiddle")), onTarget: gameBoard[to.row][to.column]!)
+        let moveToTop = SKAction.perform(Selector(("moveToTop")), onTarget: movingMarble)
+        let moveToNewPosition = SKAction.follow(marblePath, asOffset: false, orientToPath: false, speed: 70)
+        let moveToMiddle = SKAction.perform(Selector(("moveToMiddle")), onTarget: movingMarble)
 
-        let moveAction = SKAction.sequence([a, b, c])
-        gameBoard[to.row][to.column]!.unHighlight()
-        gameBoard[to.row][to.column]!.run(moveAction)
+        let moveAction = SKAction.sequence([moveToTop, moveToNewPosition, moveToMiddle])
+        movingMarble.unHighlight()
+        movingMarble.run(moveAction)
 
         return indices
     }
@@ -321,10 +305,6 @@ class GameScene: SKScene {
         }
 
         return path
-    }
-
-    func saveGameBoard() {
-        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: gameBoard), forKey: MessagesViewController.sharedMessagesViewController.currentGameIdentifier! + MessagesViewController.sharedMessagesViewController.currentConversation.localParticipantIdentifier.uuidString + "new")
     }
 
     func drawCoordinateLabel(forIndex index: MarbleIndex) {
@@ -356,17 +336,17 @@ class GameScene: SKScene {
 
         switch homeColor {
         case .purple:
-            homeIndices = greenStartingIndices
+            homeIndices = GameScene.greenStartingIndices
 
         case .red:
-            homeIndices = redStartingIndices
+            homeIndices = GameScene.redStartingIndices
         default:
             print("Todo")
-            homeIndices = greenStartingIndices // Temporary to please compiler gods
+            homeIndices = GameScene.greenStartingIndices // Temporary to please compiler gods 🙌
         }
 
         for index in homeIndices {
-            if let marble = gameBoard[index.row][index.column] {
+            if let marble = MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[index.row][index.column] {
                 if marble.marbleColor == color {
                     score += 1
                 }

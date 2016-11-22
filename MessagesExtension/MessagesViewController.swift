@@ -36,6 +36,7 @@ class MessagesViewController: MSMessagesAppViewController {
         case playerColor
         case players
         case move
+        case gameBoard
     }
 
     struct GameState: CustomStringConvertible {
@@ -43,14 +44,16 @@ class MessagesViewController: MSMessagesAppViewController {
         var playerColor: MarbleColor!
         var move: (MarbleIndex, MarbleIndex, [MarbleIndex])?
         var players: [String: String]!
+        var gameBoard: [[MarbleNode?]]!
 
         var description: String {
             get {
                 var ret = "\(GameStateParameter.command)=\(command!);\(GameStateParameter.playerColor)=\(playerColor!);\(GameStateParameter.players)=\(players.toBase64String()!)"
                 if move != nil {
-                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1):\(move!.2)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                    ret += ";\(GameStateParameter.move)=\(move!.0):\(move!.1):\(move!.2)"
                 }
-                return ret
+                ret += ";\(GameStateParameter.gameBoard)=\(stringFrom(gameBoard: gameBoard))"
+                return ret.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
         }
 
@@ -59,16 +62,18 @@ class MessagesViewController: MSMessagesAppViewController {
             self.playerColor = nil
             self.move = nil
             self.players = nil
+            self.gameBoard = nil
         }
-        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex, [MarbleIndex])? = nil) {
+        init(command: GameCommand?, playerColor: MarbleColor?, players: [String: String]?, move: (MarbleIndex, MarbleIndex, [MarbleIndex])? = nil, gameBoard: [[MarbleNode?]]) {
             self.command = command
             self.playerColor = playerColor
             self.players = players
             self.move = move
+            self.gameBoard = gameBoard
         }
 
         init(description: String) {
-            let parameters = description.components(separatedBy: ";")
+            let parameters = description.removingPercentEncoding!.components(separatedBy: ";")
             for parameter in parameters {
                 let values = parameter.components(separatedBy: "=")
                 guard values.count > 1 else {
@@ -100,14 +105,56 @@ class MessagesViewController: MSMessagesAppViewController {
                     let from = MarbleIndex(string: movePositions[0])
                     let to = MarbleIndex(string: movePositions[1])
 
-                    let indexStrings = String(movePositions[2].removingPercentEncoding!.characters.dropFirst().dropLast()).components(separatedBy: ", ")
+                    let indexStrings = String(movePositions[2].characters.dropFirst().dropLast()).components(separatedBy: ", ")
                     var indices = [MarbleIndex]()
                     for indexString in indexStrings {
                         indices.append(MarbleIndex(string: indexString))
                     }
                     self.move = (from, to, indices)
+
+                case .gameBoard:
+                    self.gameBoard = gameBoardFrom(string: values[1])
                 }
             }
+        }
+
+        func stringFrom(gameBoard: [[MarbleNode?]]) -> String {
+            var ret = ""
+            for i in 0..<gameBoard.count {
+                let row = gameBoard[i]
+                for j in 0..<row.count {
+                    if let node = row[j] {
+                        ret += "\(node.marbleColor),\(i),\(j)"
+                    }
+
+                    ret += ":"
+                }
+                ret += "],"
+            }
+            return ret
+        }
+
+        func gameBoardFrom(string boardString: String) -> [[MarbleNode?]] {
+            var board = [[MarbleNode?]](repeatElement([MarbleNode?](repeatElement(nil, count: boardWidth)), count: boardHeight))
+
+            // Drop the last (empty) component
+            let rows = Array(boardString.components(separatedBy: "],").dropLast())
+            for row in rows {
+
+                // Drop the last (empty) component
+                let nodes = Array(row.components(separatedBy: ":").dropLast())
+                for node in nodes {
+                    if node != "" {
+                        let attributes = node.components(separatedBy: ",")
+                        let color = MarbleColor(rawValue: attributes[0])!
+                        let i = Int(attributes[1])!
+                        let j = Int(attributes[2])!
+                        let newNode = MarbleNode(color: color)
+                        board[i][j] = newNode
+                    }
+                }
+            }
+            return board
         }
     }
 
@@ -138,7 +185,6 @@ class MessagesViewController: MSMessagesAppViewController {
 
         if presentationStyle == .expanded {
             currentGameIdentifier = currentConversation.selectedMessage?.url?.path
-            showGameScene(identifier: currentGameIdentifier)
             handle(newMessage: currentConversation.selectedMessage!, forConversation: conversation)
         } else {
             startGameView.isHidden = false
@@ -191,7 +237,6 @@ class MessagesViewController: MSMessagesAppViewController {
 
         if presentationStyle == .expanded {
             currentGameIdentifier = currentConversation.selectedMessage?.url?.path
-            showGameScene(identifier: currentGameIdentifier)
             handle(newMessage: currentConversation.selectedMessage!, forConversation: currentConversation)
         } else {
             startGameView.isHidden = false
@@ -211,7 +256,6 @@ class MessagesViewController: MSMessagesAppViewController {
         newGameMessage.layout = layout
 
         currentConversation.insert(newGameMessage, completionHandler: nil)
-        GameScene.sharedGame?.saveGameBoard()
 //        dismiss()
     }
 
@@ -225,7 +269,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
     @IBAction func startGame(_ sender: Any) {
         let newGameSession = MSSession()
-        nextGameState = GameState(command: .newGame, playerColor: .red, players: [currentConversation.localParticipantIdentifier.uuidString: MarbleColor.red.rawValue])
+        nextGameState = GameState(command: .newGame, playerColor: .red, players: [currentConversation.localParticipantIdentifier.uuidString: MarbleColor.red.rawValue], gameBoard: GameScene.resetGame())
 
         currentGameIdentifier = UUID().uuidString
 
@@ -235,6 +279,8 @@ class MessagesViewController: MSMessagesAppViewController {
     func showGameScene(identifier: String? = nil) {
         if gameScene == nil {
             loadGameScene(identifier: identifier)
+        } else {
+            gameScene.setup(identifier: identifier)
         }
         startGameView.isHidden = true
         gameView.isHidden = false
@@ -272,10 +318,12 @@ class MessagesViewController: MSMessagesAppViewController {
         }
 
         func playMove() {
+            nextGameState?.gameBoard = previousGameState.gameBoard
+            showGameScene(identifier: currentGameIdentifier)
             let move = previousGameState.move!
             nextGameState?.players = previousGameState.players
             nextGameState?.playerColor = MarbleColor(rawValue: previousGameState.players[conversation.localParticipantIdentifier.uuidString]!)
-            GameScene.sharedGame.moveMarble(from: move.0, to: move.1, path: move.2)
+            GameScene.sharedGame.moveMarble(from: move.0, to: move.1, path: move.2, updateBoard: true)
         }
 
         switch previousGameState.command! {
@@ -291,7 +339,8 @@ class MessagesViewController: MSMessagesAppViewController {
                     break
                 }
             }
-            GameScene.sharedGame.resetGame()
+            nextGameState?.gameBoard = GameScene.resetGame()
+            showGameScene(identifier: currentGameIdentifier)
 
         case .move:
             print("Move")
