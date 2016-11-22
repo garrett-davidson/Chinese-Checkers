@@ -243,8 +243,9 @@ class MessagesViewController: MSMessagesAppViewController {
         }
     }
 
-    func sendReply(session: MSSession) {
-        let newGameMessage = MSMessage(session: session)
+    func sendReply(session: MSSession? = nil) {
+        let currentSession = session ?? currentConversation.selectedMessage!.session!
+        let newGameMessage = MSMessage(session: currentSession)
 
         let url = URL(string: "\(currentGameIdentifier!)?\(nextGameState!)")!
         newGameMessage.url = url

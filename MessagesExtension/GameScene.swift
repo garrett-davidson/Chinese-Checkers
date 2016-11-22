@@ -331,7 +331,11 @@ class GameScene: SKScene {
 
         let moveAction = SKAction.sequence([moveToTop, moveToNewPosition, moveToMiddle])
         movingMarble.unHighlight()
-        movingMarble.run(moveAction)
+        movingMarble.run(moveAction, completion: {
+            if !updateBoard {
+                MessagesViewController.sharedMessagesViewController.sendReply()
+            }
+        })
 
         return indices
     }
