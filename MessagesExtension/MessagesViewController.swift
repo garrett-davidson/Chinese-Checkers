@@ -362,9 +362,10 @@ class MessagesViewController: MSMessagesAppViewController {
         nextGameState?.playerColor = MarbleColor(rawValue: nextGameState!.players![currentConversation.localParticipantIdentifier.uuidString]!)
         nextGameState?.move = (from, to, path)
 
-        let score = gameScene.scoreFor(color: nextGameState!.playerColor)
+        let move = (from, to)
+        let score = gameScene.scoreFor(color: nextGameState!.playerColor, forMove: move)
         print(score)
-        gameScene.assignScores(color: nextGameState!.playerColor)
+        gameScene.assignScores(color: nextGameState!.playerColor, forMove: move)
         if score == -1 {
             print("I win")
             nextGameState!.command = .gameOver

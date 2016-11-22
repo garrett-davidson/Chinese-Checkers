@@ -367,26 +367,26 @@ class GameScene: SKScene {
         }
     }
 
-    func assignScores(color: MarbleColor) {
+    func assignScores(color: MarbleColor, forMove move: (MarbleIndex, MarbleIndex)? = nil) {
 
         switch color {
         case .green:
-            greenLabel.text = "\(scoreFor(color: color))/10"
+            greenLabel.text = "\(scoreFor(color: color, forMove: move))/10"
         case .red:
-            redLabel.text = "\(scoreFor(color: color))/10"
+            redLabel.text = "\(scoreFor(color: color, forMove: move))/10"
         default:
             print("Todo")
         }
 
     }
 
-    func scoreFor(color: MarbleColor) -> Int {
+    func scoreFor(color: MarbleColor, forMove move: (MarbleIndex, MarbleIndex)? = nil) -> Int {
         var score = 0
         let homeIndices: [MarbleIndex]
         let homeColor = MarbleColor.allColors.opposite(element: color)
 
         switch homeColor {
-        case .purple:
+        case .green:
             homeIndices = GameScene.greenStartingIndices
 
         case .red:
@@ -396,8 +396,15 @@ class GameScene: SKScene {
             homeIndices = GameScene.greenStartingIndices // Temporary to please compiler gods 🙌
         }
 
+        var board = MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard!
+
+        if let move = move {
+            board[move.1.row][move.1.column] = board[move.0.row][move.0.column]
+            board[move.0.row][move.0.column] = nil
+        }
+
         for index in homeIndices {
-            if let marble = MessagesViewController.sharedMessagesViewController.nextGameState!.gameBoard[index.row][index.column] {
+            if let marble = board[index.row][index.column] {
                 if marble.marbleColor == color {
                     score += 1
                 }
