@@ -57,7 +57,7 @@ class StringManager {
 }
 
 class Settings {
-    private static let bitchModeKey = "bitchMode"
+    private static let bitchModeKey = "Bitch Mode"
 
     static func isBitchMode(forUser user: String? = nil) -> Bool {
         var ret = false

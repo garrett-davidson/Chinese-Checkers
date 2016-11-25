@@ -12,6 +12,7 @@ import SpriteKit
 
 class MessagesViewController: MSMessagesAppViewController {
 
+    @IBOutlet weak var settingButton: UIButton!
     @IBOutlet weak var startGameView: UIView!
     @IBOutlet weak var winLabel: UILabel!
     var gameScene: GameScene!

@@ -18,6 +18,7 @@
 		68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AF21AF1DD63625006FC576 /* MessagesViewController.swift */; };
 		68AF21B31DD63625006FC576 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B11DD63625006FC576 /* MainInterface.storyboard */; };
 		68AF21B51DD63625006FC576 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68AF21B41DD63625006FC576 /* Assets.xcassets */; };
+		72665EF71DE7E8D60021410E /* SetingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72665EF61DE7E8D60021410E /* SetingsTableViewController.swift */; };
 		72DA4BDA1DE3DF34001E87EC /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 72DA4BD91DE3DF34001E87EC /* GameScene.sks */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		68AF21B21DD63625006FC576 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		68AF21B41DD63625006FC576 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		68AF21B61DD63625006FC576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		72665EF61DE7E8D60021410E /* SetingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetingsTableViewController.swift; path = ../SetingsTableViewController.swift; sourceTree = "<group>"; };
 		72DA4BD91DE3DF34001E87EC /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 				689812A81DD69AEF008212E8 /* MarbleNode.swift */,
 				68AF21AF1DD63625006FC576 /* MessagesViewController.swift */,
 				686A98281DE503D8000A554B /* Settings.swift */,
+				72665EF61DE7E8D60021410E /* SetingsTableViewController.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				689812A51DD64C2C008212E8 /* GameScene.swift in Sources */,
 				689812A91DD69AEF008212E8 /* MarbleNode.swift in Sources */,
 				68AF21B01DD63625006FC576 /* MessagesViewController.swift in Sources */,
+				72665EF71DE7E8D60021410E /* SetingsTableViewController.swift in Sources */,
 				686A98291DE503D8000A554B /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
