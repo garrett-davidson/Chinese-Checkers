@@ -390,6 +390,13 @@ class MessagesViewController: MSMessagesAppViewController {
         }
     }
 
+    func currentPlayers() -> [String] {
+        if let state = MessagesViewController.sharedMessagesViewController.nextGameState {
+            return Array(state.players.keys)
+        }
+
+        return [String]()
+    }
 }
 
 extension Dictionary {

@@ -55,7 +55,7 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
         var isChecked = false
         if title == "Bitch Mode (Local)" {
             //todo: USER YOU ARE FACING
-            isChecked = Settings.isBitchMode(forUser: "SOMETHING")
+            isChecked = Settings.isBitchMode(forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
         } else if title == "Bitch Mode (Global)" {
             isChecked = Settings.isBitchMode()
         } else {
