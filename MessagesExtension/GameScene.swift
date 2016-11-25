@@ -424,7 +424,7 @@ class GameScene: SKScene {
         return score
     }
 
-    func waitingTurn() {
+    func showWaitingOverlay() {
         self.alpha = 0.5
         view?.tintColor = .black
         waitLabel = SKLabelNode(fontNamed: "Arial")
@@ -434,25 +434,36 @@ class GameScene: SKScene {
         self.addChild(waitLabel)
     }
 
+    func hideWaitOverlay() {
+        self.alpha = 1
+        view?.tintColor = .clear
+        waitLabel?.removeFromParent()
+    }
+
     func checkTurn() {
         guard let gameState = MessagesViewController.sharedMessagesViewController.nextGameState else {
-            waitingTurn()
+            showWaitingOverlay()
             return
         }
+        
         guard let playerColor = MessagesViewController.sharedMessagesViewController.currentConversation else {
-            waitingTurn()
+            showWaitingOverlay()
             return
         }
-        if gameState.playerColor == nil {
-            waitingTurn()
-            self.isUserInteractionEnabled = false
-            return
-        }
-        if gameState.playerColor != MarbleColor(rawValue: gameState.players[playerColor.localParticipantIdentifier.uuidString]!) {
-            waitingTurn()
-            self.isUserInteractionEnabled = false
 
+        if gameState.playerColor == nil {
+            showWaitingOverlay()
+            self.isUserInteractionEnabled = false
+            return
         }
+
+        if gameState.playerColor != MarbleColor(rawValue: gameState.players[playerColor.localParticipantIdentifier.uuidString]!) {
+            showWaitingOverlay()
+            self.isUserInteractionEnabled = false
+            return
+        }
+
+        hideWaitOverlay()
     }
 }
 

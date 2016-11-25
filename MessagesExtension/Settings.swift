@@ -27,9 +27,9 @@ class StringManager {
                     ("Go bitch.", nil),
                     ("You're going down bitch.", nil),
                     ("Y u take soooo long?", nil),
-                    ("Y u take soooo long?", "😑"),
                     ("🖕", nil),
                     ("Hurry up! I'm about to win!", nil),
+                    ("Bitch I'm waiting.", nil),
                     ].random
         } else {
             return [("Your turn.", nil),
@@ -47,7 +47,7 @@ class StringManager {
                     ("😁", nil),
                     ("😉", nil),
                     ("🍆", "Suck it"),
-                    ("Get on my level", nil),
+                    ("Get on my level", ":p"),
                     ].random
         } else {
             return [("I win!", nil),
