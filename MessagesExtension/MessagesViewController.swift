@@ -241,6 +241,11 @@ class MessagesViewController: MSMessagesAppViewController {
         } else {
             startGameView.isHidden = false
             gameView.isHidden = true
+            if let message = currentConversation?.selectedMessage {
+                // todo: test this
+                currentGameIdentifier = currentConversation.selectedMessage?.url?.path
+                handle(newMessage: message, forConversation: currentConversation)
+            }
         }
     }
 
@@ -252,7 +257,10 @@ class MessagesViewController: MSMessagesAppViewController {
         newGameMessage.url = url
 
         let layout = MSMessageTemplateLayout()
-        layout.image = getScreenshot()
+
+        if Settings.shouldSendImages() {
+            layout.image = getScreenshot()
+        }
 
         let messageText: String
         let subCaption: String?
