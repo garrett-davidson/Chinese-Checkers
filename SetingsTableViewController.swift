@@ -13,7 +13,7 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
     enum SettingsCellTag: Int {
         case BitchModeCurrentConversation = 0
         case BitchModeGlobal
-        case SendPictures
+        case SendImagees
     }
 
     @IBAction func cancel(_ sender: Any) {
@@ -29,8 +29,8 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
                     Settings.set(bitchMode: cell.settingSwitch.isOn, forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
                 case .BitchModeGlobal:
                     Settings.set(bitchMode: cell.settingSwitch.isOn)
-                case .SendPictures:
-                    print("Send pictures")
+                case .SendImagees:
+                    Settings.set(shouldSendImage: cell.settingSwitch.isOn)
                 }
             }
         }
@@ -73,11 +73,11 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
             isChecked = Settings.isBitchMode(forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
         case .BitchModeGlobal:
             isChecked = Settings.isBitchMode()
-        case .SendPictures:
-            isChecked = true
-            print("todo: implement send pictures settings")
+        case .SendImagees:
+            isChecked = Settings.shouldSendImages()
         }
 
+        cell.tag = setting.rawValue
         cell.settingSwitch.isOn = isChecked
         return cell
     }

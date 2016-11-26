@@ -58,6 +58,7 @@ class StringManager {
 
 class Settings {
     private static let bitchModeKey = "Bitch Mode"
+    private static let sendImagesKey = "Send Images"
 
     static func isBitchMode(forUser user: String? = nil) -> Bool {
         var ret = false
@@ -85,6 +86,14 @@ class Settings {
         } else {
             UserDefaults.standard.set(bitchMode, forKey: bitchModeKey)
         }
+    }
+
+    static func shouldSendImages() -> Bool {
+        return UserDefaults.standard.bool(forKey: sendImagesKey)
+    }
+
+    static func set(shouldSendImage: Bool) {
+        UserDefaults.standard.set(shouldSendImage, forKey: sendImagesKey)
     }
 }
 
