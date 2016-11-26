@@ -10,28 +10,14 @@ import UIKit
 
 class SetingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let settingsTable = ["Bitch Mode (Local)", "Bitch Mode (Global)", "other settings?"]
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    enum SettingsCellTag: Int {
+        case BitchModeCurrentConversation = 0
+        case BitchModeGlobal
+        case SendPictures
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
+    @IBOutlet weak var tableView: UITableView!
+    let settingsTable = ["Bitch Mode (Current Conversation)", "Bitch Mode (Global)", "Send Pictures"]
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
@@ -39,27 +25,55 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
         if segue.identifier == "cancel" {
             //Make it so the screen doesn't change???
         } else if segue.identifier == "save" {
             //Save the settings bitch
+            for i in 0..<settingsTable.count {
+                if let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? SettingsCell {
+                    switch SettingsCellTag(rawValue: cell.tag)! {
+                    case .BitchModeCurrentConversation:
+                        Settings.set(bitchMode: cell.settingSwitch.isOn, forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
+                    case .BitchModeGlobal:
+                        Settings.set(bitchMode: cell.settingSwitch.isOn)
+                    case .SendPictures:
+                        print("Send pictures")
+                    }
+                }
+            }
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! SettingsCell
-        // Configure the cell...
-        let title = settingsTable[(indexPath as NSIndexPath).row]
-        cell.titleLabel?.text = title
-        var isChecked = false
-        if title == "Bitch Mode (Local)" {
-            //todo: USER YOU ARE FACING
+        func createErrorCell() -> UITableViewCell {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            cell.textLabel?.text = "Error"
+            return cell
+        }
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as? SettingsCell else {
+            print("Couldn't load settings cell")
+            return createErrorCell()
+        }
+
+        guard let setting = SettingsCellTag(rawValue: indexPath.row) else {
+            print("Unknown setting type")
+            return createErrorCell()
+        }
+
+        let settingTitle = settingsTable[setting.rawValue]
+
+        cell.titleLabel?.text = settingTitle
+
+        let isChecked: Bool
+        switch setting {
+        case .BitchModeCurrentConversation:
             isChecked = Settings.isBitchMode(forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
-        } else if title == "Bitch Mode (Global)" {
+        case .BitchModeGlobal:
             isChecked = Settings.isBitchMode()
-        } else {
-            isChecked = UserDefaults.standard.bool(forKey: settingsTable[(indexPath as NSIndexPath).row])
+        case .SendPictures:
+            isChecked = true
+            print("todo: implement send pictures settings")
         }
 
         cell.settingSwitch.isOn = isChecked
@@ -80,6 +94,5 @@ class SettingsCell: UITableViewCell {
             UserDefaults.standard.set(sender.isOn, forKey: (self.titleLabel?.text)!)
         }
     }
-
 
 }
