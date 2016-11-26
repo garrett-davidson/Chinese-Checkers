@@ -16,32 +16,34 @@ class SetingsTableViewController: UIViewController, UITableViewDataSource, UITab
         case SendPictures
     }
 
+    @IBAction func cancel(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    @IBAction func save(_ sender: Any) {
+
+        for i in 0..<settingsTable.count {
+            if let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? SettingsCell {
+                switch SettingsCellTag(rawValue: cell.tag)! {
+                case .BitchModeCurrentConversation:
+                    Settings.set(bitchMode: cell.settingSwitch.isOn, forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
+                case .BitchModeGlobal:
+                    Settings.set(bitchMode: cell.settingSwitch.isOn)
+                case .SendPictures:
+                    print("Send pictures")
+                }
+            }
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+
+
     @IBOutlet weak var tableView: UITableView!
     let settingsTable = ["Bitch Mode (Current Conversation)", "Bitch Mode (Global)", "Send Pictures"]
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return settingsTable.count
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "cancel" {
-            //Make it so the screen doesn't change???
-        } else if segue.identifier == "save" {
-            //Save the settings bitch
-            for i in 0..<settingsTable.count {
-                if let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? SettingsCell {
-                    switch SettingsCellTag(rawValue: cell.tag)! {
-                    case .BitchModeCurrentConversation:
-                        Settings.set(bitchMode: cell.settingSwitch.isOn, forUsers: MessagesViewController.sharedMessagesViewController.currentPlayers())
-                    case .BitchModeGlobal:
-                        Settings.set(bitchMode: cell.settingSwitch.isOn)
-                    case .SendPictures:
-                        print("Send pictures")
-                    }
-                }
-            }
-        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

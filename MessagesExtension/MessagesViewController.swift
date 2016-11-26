@@ -12,6 +12,7 @@ import SpriteKit
 
 class MessagesViewController: MSMessagesAppViewController {
 
+    @IBOutlet weak var gameSettingsButton: UIButton!
     @IBOutlet weak var settingButton: UIButton!
     @IBOutlet weak var startGameView: UIView!
     @IBOutlet weak var winLabel: UILabel!
@@ -189,6 +190,7 @@ class MessagesViewController: MSMessagesAppViewController {
         } else {
             startGameView.isHidden = false
             gameView.isHidden = true
+            gameSettingsButton.isHidden = true
         }
     }
 
@@ -241,6 +243,7 @@ class MessagesViewController: MSMessagesAppViewController {
         } else {
             startGameView.isHidden = false
             gameView.isHidden = true
+            gameSettingsButton.isHidden = true
         }
     }
 
@@ -299,6 +302,7 @@ class MessagesViewController: MSMessagesAppViewController {
         }
         startGameView.isHidden = true
         gameView.isHidden = false
+        gameSettingsButton.isHidden = false
         gameView.presentScene(gameScene)
 
     }
